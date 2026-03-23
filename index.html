@@ -1,136 +1,853 @@
-
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Zero17 Burger — Plano 360</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--r:#e30613;--y:#fbba00;--bl:#111111;--wh:#fff;--gray1:#f7f6f3;--gray2:#eeede9;--gray3:#888}
-body{font-family:system-ui,sans-serif;background:transparent;color:var(--color-text-primary)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
-.nav{display:flex;background:var(--bl);overflow-x:auto;scrollbar-width:none;border-bottom:3px solid var(--r)}
+:root{
+  --r:#e30613;
+  --r2:#ff1a1a;
+  --y:#fbba00;
+  --y2:#ffd84d;
+  --bl:#000000;
+  --bl2:#0a0a0a;
+  --bl3:#111111;
+  --bl4:#1a1a1a;
+  --bl5:#222222;
+  --wh:#ffffff;
+  --gray1:#2a2a2a;
+  --gray2:#333333;
+  --gray3:#666666;
+  --gray4:#888888;
+  --neon-r: 0 0 10px rgba(227,6,19,.6), 0 0 30px rgba(227,6,19,.3);
+  --neon-y: 0 0 10px rgba(251,186,0,.6), 0 0 30px rgba(251,186,0,.2);
+  --font-display: 'Bebas Neue', 'Impact', sans-serif;
+  --font-ui: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Barlow', system-ui, sans-serif;
+}
+
+html,body{background:var(--bl);color:var(--wh);font-family:var(--font-body);min-height:100vh;overscroll-behavior:none}
+
+/* ====== HEADER ====== */
+.header{
+  background:var(--bl);
+  border-bottom:2px solid var(--r);
+  padding:.6rem 1rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow: 0 2px 20px rgba(227,6,19,.3);
+}
+.logo{
+  font-family:var(--font-display);
+  font-size:28px;
+  letter-spacing:.05em;
+  line-height:1;
+  color:var(--wh);
+}
+.logo span{color:var(--r)}
+.logo-sub{font-family:var(--font-ui);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gray4);margin-top:-2px}
+
+.header-badge{
+  font-family:var(--font-ui);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  background:var(--r);
+  color:#fff;
+  padding:4px 10px;
+  border-radius:3px;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+
+/* ====== NAV ====== */
+.nav{
+  display:flex;
+  background:var(--bl3);
+  overflow-x:auto;
+  scrollbar-width:none;
+  border-bottom:1px solid var(--bl5);
+  position:sticky;
+  top:58px;
+  z-index:99;
+}
 .nav::-webkit-scrollbar{display:none}
-.ntab{flex-shrink:0;padding:.55rem .9rem;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.4);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .15s;white-space:nowrap}
-.ntab.on{color:var(--y);border-bottom-color:var(--y)}
-.ntab:hover:not(.on){color:#fff}
+.ntab{
+  flex-shrink:0;
+  padding:.7rem .9rem;
+  font-family:var(--font-ui);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--gray3);
+  cursor:pointer;
+  border-bottom:3px solid transparent;
+  margin-bottom:-1px;
+  transition:all .2s;
+  white-space:nowrap;
+  display:flex;
+  align-items:center;
+  gap:.35rem;
+}
+.ntab .tab-icon{font-size:14px}
+.ntab.on{color:var(--y);border-bottom-color:var(--y);text-shadow:var(--neon-y)}
+.ntab:hover:not(.on){color:var(--wh)}
 
-.pg{display:none;padding:1rem}
+/* ====== PAGES ====== */
+.pg{display:none;padding:1rem;animation:fadeIn .25s ease}
 .pg.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-.sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray3);margin-bottom:.5rem}
+/* ====== SECTION LABEL ====== */
+.sec-label{
+  font-family:var(--font-ui);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--gray3);
+  margin-bottom:.6rem;
+  display:flex;
+  align-items:center;
+  gap:.4rem;
+}
+.sec-label::before{content:"";display:block;width:3px;height:12px;background:var(--r);border-radius:2px}
 
-/* CRONOGRAMA */
-.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px}
-.cal-dh{font-size:10px;font-weight:700;text-align:center;color:var(--gray3);padding:.2rem 0;text-transform:uppercase}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cal-day{min-height:54px;border-radius:6px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:4px 5px;cursor:pointer;transition:border-color .15s;position:relative}
-.cal-day:hover{border-color:var(--r)}
+/* ====== PROGRESS SUMMARY ====== */
+.progress-summary{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.5rem;
+  margin-bottom:1rem;
+}
+.ps-card{
+  background:var(--bl3);
+  border:1px solid var(--bl5);
+  border-radius:10px;
+  padding:.7rem .5rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.ps-card::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:var(--r);
+}
+.ps-num{
+  font-family:var(--font-display);
+  font-size:30px;
+  color:var(--y);
+  line-height:1;
+  text-shadow:var(--neon-y);
+}
+.ps-label{
+  font-family:var(--font-ui);
+  font-size:10px;
+  color:var(--gray3);
+  margin-top:3px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+
+/* ====== CALENDAR ====== */
+.cal-month-label{
+  font-family:var(--font-display);
+  font-size:18px;
+  letter-spacing:.05em;
+  color:var(--gray4);
+  margin-bottom:.4rem;
+  margin-top:.6rem;
+}
+.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px}
+.cal-dh{
+  font-family:var(--font-ui);
+  font-size:9px;
+  font-weight:700;
+  text-align:center;
+  color:var(--gray3);
+  padding:.25rem 0;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:.3rem}
+.cal-day{
+  min-height:52px;
+  border-radius:6px;
+  border:1px solid var(--bl5);
+  background:var(--bl3);
+  padding:4px 4px 3px;
+  cursor:pointer;
+  transition:all .15s;
+  position:relative;
+}
+.cal-day:active{transform:scale(.96)}
+.cal-day:hover{border-color:var(--r);background:var(--bl4)}
 .cal-day.empty{background:transparent;border-color:transparent;cursor:default}
-.cal-day.today{border:1.5px solid var(--r)}
-.cal-day.checked{background:#e30613;border-color:#e30613}
+.cal-day.today{border:1.5px solid var(--r);box-shadow:var(--neon-r)}
+.cal-day.checked{background:var(--r);border-color:var(--r)}
 .cal-day.checked .cal-dn{color:#fff}
 .cal-day.checked .cal-tags{opacity:.8}
-.cal-day.checked::after{content:"✓";position:absolute;top:3px;right:5px;font-size:11px;font-weight:700;color:#fff}
-.cal-day.event-day{border-left:2.5px solid var(--y)}
-.cal-dn{font-size:11px;font-weight:700;color:var(--color-text-primary);margin-bottom:2px}
-.cal-tags{display:flex;flex-wrap:wrap;gap:2px}
-.ct{font-size:8px;padding:1px 4px;border-radius:3px;font-weight:700;white-space:nowrap}
-.ct-r{background:#e30613;color:#fff}
-.ct-y{background:#fbba00;color:#111}
-.ct-b{background:#1a1a1a;color:#fbba00}
-.ct-g{background:#22c55e;color:#fff}
-.ct-p{background:#7c3aed;color:#fff}
+.cal-day.checked::after{content:"✓";position:absolute;top:3px;right:4px;font-size:10px;font-weight:700;color:#fff}
+.cal-day.event-day{border-left:2.5px solid var(--y);box-shadow:inset 2px 0 8px rgba(251,186,0,.08)}
+.cal-day.selected{border-color:var(--y)!important;border-width:1.5px}
+.cal-dn{
+  font-family:var(--font-ui);
+  font-size:11px;
+  font-weight:700;
+  color:var(--wh);
+  margin-bottom:2px;
+  line-height:1;
+}
+.cal-tags{display:flex;flex-wrap:wrap;gap:1px}
+.ct{font-size:7px;padding:1px 3px;border-radius:2px;font-weight:700;white-space:nowrap;font-family:var(--font-ui);letter-spacing:.03em}
+.ct-r{background:var(--r);color:#fff}
+.ct-y{background:var(--y);color:#111}
+.ct-b{background:#1a3a6e;color:#6ea8ff}
+.ct-g{background:#0d3d1e;color:#4ade80}
+.ct-p{background:#3b1a5e;color:#c084fc}
 
-.day-detail{margin-top:1rem;border-radius:10px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);overflow:hidden;display:none}
-.day-detail.on{display:block}
-.dd-head{background:var(--bl);padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between}
-.dd-title{font-size:14px;font-weight:700;color:#fff}
-.dd-phase{font-size:10px;font-weight:700;background:var(--r);color:#fff;padding:2px 8px;border-radius:10px;letter-spacing:.05em}
-.dd-body{padding:.8rem 1rem}
-.task-list{display:flex;flex-direction:column;gap:.4rem}
-.task{display:flex;align-items:flex-start;gap:.5rem;padding:.4rem .5rem;border-radius:6px;cursor:pointer;transition:background .1s}
-.task:hover{background:var(--gray1)}
-.task.done{opacity:.55}
-.task.done .task-text{text-decoration:line-through}
-.chk{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--color-border-secondary);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;transition:all .15s;background:var(--color-background-primary)}
-.chk.on{background:var(--r);border-color:var(--r);color:#fff}
-.task-text{font-size:12px;line-height:1.4;color:var(--color-text-primary)}
-.task-type{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:auto;flex-shrink:0;align-self:center}
+/* ====== DAY DETAIL ====== */
+.day-detail{
+  margin-top:.75rem;
+  border-radius:12px;
+  border:1px solid var(--bl5);
+  background:var(--bl3);
+  overflow:hidden;
+  display:none;
+}
+.day-detail.on{display:block;animation:fadeIn .2s ease}
+.dd-head{
+  background:var(--bl4);
+  padding:.7rem 1rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--bl5);
+}
+.dd-title{
+  font-family:var(--font-display);
+  font-size:16px;
+  letter-spacing:.04em;
+  color:var(--wh);
+}
+.dd-phase{
+  font-family:var(--font-ui);
+  font-size:10px;
+  font-weight:700;
+  background:var(--r);
+  color:#fff;
+  padding:3px 10px;
+  border-radius:20px;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+.dd-body{padding:.8rem .9rem}
+.task-list{display:flex;flex-direction:column;gap:.3rem}
+.task{
+  display:flex;
+  align-items:flex-start;
+  gap:.5rem;
+  padding:.45rem .5rem;
+  border-radius:8px;
+  cursor:pointer;
+  transition:background .12s;
+  border:1px solid transparent;
+}
+.task:hover{background:var(--bl4);border-color:var(--bl5)}
+.task:active{transform:scale(.99)}
+.task.done{opacity:.5}
+.task.done .task-text{text-decoration:line-through;color:var(--gray3)}
+.chk{
+  width:18px;height:18px;
+  border-radius:5px;
+  border:1.5px solid var(--gray3);
+  flex-shrink:0;
+  margin-top:1px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  font-weight:700;
+  transition:all .15s;
+  background:var(--bl);
+}
+.chk.on{background:var(--r);border-color:var(--r);color:#fff;box-shadow:var(--neon-r)}
+.task-text{
+  font-size:13px;
+  line-height:1.4;
+  color:var(--wh);
+  flex:1;
+}
+.task-type{
+  font-family:var(--font-ui);
+  font-size:9px;
+  font-weight:700;
+  padding:2px 6px;
+  border-radius:3px;
+  margin-left:auto;
+  flex-shrink:0;
+  align-self:center;
+  letter-spacing:.04em;
+}
 
 .prog-bar{margin-top:.8rem;display:flex;align-items:center;gap:.6rem}
-.prog-track{flex:1;height:6px;background:var(--gray2);border-radius:3px;overflow:hidden}
-.prog-fill{height:100%;background:var(--r);border-radius:3px;transition:width .3s}
-.prog-text{font-size:11px;font-weight:700;color:var(--r);min-width:28px;text-align:right}
+.prog-track{flex:1;height:6px;background:var(--bl5);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--r),var(--r2));border-radius:3px;transition:width .4s cubic-bezier(.4,0,.2,1);box-shadow:var(--neon-r)}
+.prog-text{
+  font-family:var(--font-display);
+  font-size:16px;
+  color:var(--r);
+  min-width:40px;
+  text-align:right;
+  text-shadow:var(--neon-r);
+}
 
-/* PRODUTOS */
+/* ====== CARDAPIO ====== */
+.menu-hero{
+  background:var(--bl3);
+  border:1px solid var(--bl5);
+  border-radius:12px;
+  padding:1rem;
+  margin-bottom:1rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.menu-hero::before{
+  content:"017";
+  position:absolute;
+  font-family:var(--font-display);
+  font-size:120px;
+  color:rgba(227,6,19,.04);
+  right:-10px;
+  top:50%;
+  transform:translateY(-50%);
+  letter-spacing:-.02em;
+  pointer-events:none;
+}
+.menu-hero-title{
+  font-family:var(--font-display);
+  font-size:32px;
+  letter-spacing:.05em;
+  color:var(--wh);
+}
+.menu-hero-title span{color:var(--r)}
+.menu-hero-sub{
+  font-family:var(--font-ui);
+  font-size:11px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--gray4);
+  margin-top:2px;
+}
+
+.menu-section-title{
+  font-family:var(--font-display);
+  font-size:20px;
+  letter-spacing:.06em;
+  color:var(--y);
+  margin:1rem 0 .5rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.menu-section-title::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,var(--y),transparent);
+  opacity:.3;
+}
+
+.menu-items{display:flex;flex-direction:column;gap:.4rem}
+.menu-item{
+  background:var(--bl3);
+  border:1px solid var(--bl5);
+  border-radius:10px;
+  overflow:hidden;
+  transition:border-color .15s;
+}
+.menu-item:active{transform:scale(.99)}
+.menu-item.featured{border-color:rgba(227,6,19,.4)}
+.menu-item-head{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.7rem .8rem;
+  cursor:pointer;
+}
+.menu-item-num{
+  font-family:var(--font-display);
+  font-size:22px;
+  color:var(--r);
+  min-width:28px;
+  line-height:1;
+  text-shadow:var(--neon-r);
+}
+.menu-item-info{flex:1}
+.menu-item-name{
+  font-family:var(--font-ui);
+  font-size:16px;
+  font-weight:700;
+  color:var(--wh);
+  letter-spacing:.03em;
+}
+.menu-item-ingr{
+  font-size:11px;
+  color:var(--gray4);
+  line-height:1.4;
+  margin-top:1px;
+}
+.menu-item-prices{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:2px;
+}
+.price-single{
+  font-family:var(--font-display);
+  font-size:18px;
+  color:var(--y);
+  line-height:1;
+  text-shadow:var(--neon-y);
+}
+.price-double{
+  font-family:var(--font-ui);
+  font-size:11px;
+  color:var(--gray3);
+  font-weight:600;
+}
+.menu-item-tag{
+  font-family:var(--font-ui);
+  font-size:9px;
+  font-weight:700;
+  background:var(--r);
+  color:#fff;
+  padding:2px 7px;
+  border-radius:3px;
+  letter-spacing:.06em;
+  margin-bottom:.2rem;
+  display:inline-block;
+  text-transform:uppercase;
+}
+.menu-item-body{
+  display:none;
+  padding:.6rem .8rem .8rem;
+  border-top:1px solid var(--bl5);
+  background:var(--bl4);
+}
+.menu-item.open .menu-item-body{display:block;animation:fadeIn .2s ease}
+.menu-item-desc{
+  font-size:12px;
+  color:var(--gray4);
+  line-height:1.5;
+  margin-bottom:.5rem;
+}
+.ingr-list{display:flex;flex-wrap:wrap;gap:.25rem}
+.ingr-chip{
+  font-family:var(--font-ui);
+  font-size:10px;
+  font-weight:600;
+  background:var(--bl5);
+  color:var(--gray4);
+  padding:2px 8px;
+  border-radius:20px;
+  border:1px solid var(--bl4);
+}
+
+.menu-accomp-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.accomp-card{
+  background:var(--bl3);
+  border:1px solid var(--bl5);
+  border-radius:10px;
+  padding:.7rem .8rem;
+}
+.accomp-name{
+  font-family:var(--font-ui);
+  font-size:14px;
+  font-weight:700;
+  color:var(--wh);
+  margin-bottom:.2rem;
+}
+.accomp-desc{font-size:11px;color:var(--gray4);line-height:1.4;margin-bottom:.4rem}
+.accomp-price{
+  font-family:var(--font-display);
+  font-size:20px;
+  color:var(--y);
+  text-shadow:var(--neon-y);
+}
+
+/* ====== PRODUTOS (campanha) ====== */
 .prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
-.prod-card{border-radius:10px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);overflow:hidden;cursor:pointer;transition:border-color .15s}
+.prod-card{
+  border-radius:10px;
+  border:1px solid var(--bl5);
+  background:var(--bl3);
+  overflow:hidden;
+  cursor:pointer;
+  transition:border-color .15s;
+}
 .prod-card:hover{border-color:var(--r)}
-.prod-card.open{border-color:var(--r);border-width:1.5px}
-.prod-top{background:var(--bl);padding:.6rem .8rem;display:flex;align-items:center;gap:.5rem}
-.prod-num{font-size:18px;font-weight:700;color:var(--y);min-width:22px;line-height:1;font-family:Georgia,serif}
-.prod-name{font-size:13px;font-weight:700;color:#fff;line-height:1.2}
-.prod-tag{font-size:9px;font-weight:700;background:var(--r);color:#fff;padding:1px 6px;border-radius:8px;margin-left:auto;white-space:nowrap}
+.prod-card.open{border-color:var(--r);border-width:1.5px;box-shadow:0 0 15px rgba(227,6,19,.15)}
+.prod-top{
+  background:var(--bl4);
+  padding:.6rem .8rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  border-bottom:1px solid var(--bl5);
+}
+.prod-num{
+  font-family:var(--font-display);
+  font-size:22px;
+  color:var(--y);
+  min-width:24px;
+  line-height:1;
+}
+.prod-name{
+  font-family:var(--font-ui);
+  font-size:14px;
+  font-weight:700;
+  color:var(--wh);
+  line-height:1.2;
+}
+.prod-tag{
+  font-family:var(--font-ui);
+  font-size:8px;
+  font-weight:700;
+  background:var(--r);
+  color:#fff;
+  padding:2px 6px;
+  border-radius:20px;
+  margin-left:auto;
+  white-space:nowrap;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
 .prod-body{padding:.7rem .8rem;display:none}
-.prod-card.open .prod-body{display:block}
-.prod-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:.6rem}
-.copy-block{background:var(--gray1);border-radius:6px;padding:.5rem .6rem;margin-bottom:.4rem;border-left:2px solid var(--r)}
-.copy-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--r);margin-bottom:.2rem}
-.copy-text{font-size:11px;line-height:1.5;color:var(--color-text-primary)}
-.copy-cta{font-size:10px;font-weight:700;color:var(--gray3);margin-top:.2rem}
+.prod-card.open .prod-body{display:block;animation:fadeIn .2s ease}
+.prod-desc{font-size:11px;color:var(--gray4);line-height:1.5;margin-bottom:.6rem}
+.copy-block{
+  background:var(--bl4);
+  border-radius:6px;
+  padding:.5rem .6rem;
+  margin-bottom:.4rem;
+  border-left:2px solid var(--r);
+}
+.copy-label{
+  font-family:var(--font-ui);
+  font-size:9px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--r);
+  margin-bottom:.2rem;
+}
+.copy-text{font-size:11px;line-height:1.5;color:var(--wh)}
 .content-pills{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.5rem}
-.cpill{font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px}
+.cpill{font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;font-family:var(--font-ui);letter-spacing:.04em;text-transform:uppercase}
 
-/* COPIES GERAIS */
-.copy-section{margin-bottom:1rem}
-.copy-section-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:.4rem;padding-bottom:.3rem;border-bottom:0.5px solid var(--color-border-tertiary)}
-.big-copy{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:8px;padding:.7rem .8rem;margin-bottom:.35rem;cursor:pointer;transition:border-color .15s}
-.big-copy:hover{border-color:var(--r)}
-.bc-meta{display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem}
-.bc-phase{font-size:9px;font-weight:700;letter-spacing:.05em;background:var(--bl);color:var(--y);padding:2px 7px;border-radius:8px}
-.bc-format{font-size:9px;color:var(--gray3);font-weight:600}
-.bc-head{font-size:13px;font-weight:700;color:var(--color-text-primary);margin-bottom:.2rem;line-height:1.3}
-.bc-body{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
-.bc-cta{font-size:10px;font-weight:700;color:var(--r);margin-top:.2rem}
+/* ====== COPIES ====== */
+.copy-section{margin-bottom:1.2rem}
+.copy-section-title{
+  font-family:var(--font-display);
+  font-size:18px;
+  letter-spacing:.05em;
+  color:var(--y);
+  margin-bottom:.5rem;
+  padding-bottom:.4rem;
+  border-bottom:1px solid var(--bl5);
+}
+.big-copy{
+  background:var(--bl3);
+  border:1px solid var(--bl5);
+  border-radius:10px;
+  padding:.75rem .85rem;
+  margin-bottom:.4rem;
+  cursor:pointer;
+  transition:all .15s;
+}
+.big-copy:hover{border-color:var(--r);background:var(--bl4)}
+.big-copy:active{transform:scale(.99)}
+.bc-meta{display:flex;align-items:center;gap:.4rem;margin-bottom:.35rem;flex-wrap:wrap}
+.bc-phase{
+  font-family:var(--font-ui);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.07em;
+  background:var(--r);
+  color:#fff;
+  padding:2px 8px;
+  border-radius:3px;
+  text-transform:uppercase;
+}
+.bc-format{font-family:var(--font-ui);font-size:10px;color:var(--gray3);font-weight:600;letter-spacing:.04em}
+.bc-head{
+  font-family:var(--font-ui);
+  font-size:15px;
+  font-weight:700;
+  color:var(--wh);
+  margin-bottom:.25rem;
+  line-height:1.3;
+}
+.bc-body{font-size:12px;color:var(--gray4);line-height:1.5}
+.bc-cta{
+  font-family:var(--font-display);
+  font-size:14px;
+  letter-spacing:.06em;
+  color:var(--r);
+  margin-top:.35rem;
+  text-shadow:var(--neon-r);
+}
 
-/* ADS */
-.ads-step{border-radius:10px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);margin-bottom:.6rem;overflow:hidden}
-.ads-step-head{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;cursor:pointer}
-.ads-step-num{width:26px;height:26px;border-radius:50%;background:var(--r);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ads-step-title{font-size:13px;font-weight:700;color:var(--color-text-primary);flex:1}
-.ads-step-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap}
-.ads-step-body{display:none;padding:.6rem .9rem;border-top:0.5px solid var(--color-border-tertiary);background:var(--gray1)}
-.ads-step.open .ads-step-body{display:block}
-.ads-row{display:flex;gap:.5rem;margin-bottom:.4rem;align-items:flex-start;font-size:12px;line-height:1.4;color:var(--color-text-primary)}
-.ads-row-label{font-weight:700;color:var(--r);min-width:90px;flex-shrink:0}
+/* ====== ADS ====== */
+.ads-step{
+  border-radius:10px;
+  border:1px solid var(--bl5);
+  background:var(--bl3);
+  margin-bottom:.5rem;
+  overflow:hidden;
+}
+.ads-step-head{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.7rem .9rem;
+  cursor:pointer;
+}
+.ads-step-num{
+  width:28px;height:28px;
+  border-radius:50%;
+  background:var(--r);
+  color:#fff;
+  font-family:var(--font-display);
+  font-size:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  box-shadow:var(--neon-r);
+}
+.ads-step-title{
+  font-family:var(--font-ui);
+  font-size:14px;
+  font-weight:700;
+  color:var(--wh);
+  flex:1;
+  letter-spacing:.03em;
+}
+.ads-step-badge{
+  font-family:var(--font-ui);
+  font-size:9px;
+  font-weight:700;
+  padding:3px 9px;
+  border-radius:3px;
+  white-space:nowrap;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.ads-step-body{
+  display:none;
+  padding:.7rem .9rem;
+  border-top:1px solid var(--bl5);
+  background:var(--bl4);
+}
+.ads-step.open .ads-step-body{display:block;animation:fadeIn .2s ease}
+.ads-row{
+  display:flex;
+  gap:.5rem;
+  margin-bottom:.45rem;
+  align-items:flex-start;
+  font-size:12px;
+  line-height:1.4;
+  color:var(--gray4);
+}
+.ads-row-label{
+  font-family:var(--font-ui);
+  font-weight:700;
+  color:var(--r);
+  min-width:90px;
+  flex-shrink:0;
+  font-size:12px;
+  letter-spacing:.03em;
+}
 .seg-grid{display:grid;grid-template-columns:1fr 1fr;gap:.35rem;margin-top:.4rem}
-.seg-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:6px;padding:.45rem .55rem}
-.seg-name{font-size:10px;font-weight:700;color:var(--color-text-primary);margin-bottom:.15rem}
-.seg-val{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
+.seg-card{
+  background:var(--bl3);
+  border:1px solid var(--bl5);
+  border-radius:6px;
+  padding:.45rem .55rem;
+}
+.seg-name{
+  font-family:var(--font-ui);
+  font-size:10px;
+  font-weight:700;
+  color:var(--wh);
+  margin-bottom:.15rem;
+  letter-spacing:.03em;
+}
+.seg-val{font-size:11px;color:var(--gray4);line-height:1.4}
 
-.budget-vis{display:flex;gap:.3rem;height:60px;align-items:flex-end;margin:.5rem 0}
-.bv-bar{flex:1;border-radius:4px 4px 0 0;background:var(--r);position:relative;display:flex;align-items:center;justify-content:center}
-.bv-label{font-size:8px;font-weight:700;color:#fff;writing-mode:horizontal-tb}
-.bv-week{font-size:9px;font-weight:700;color:var(--gray3);text-align:center;margin-top:3px}
+/* ====== XP GAMIFICATION ====== */
+.xp-bar-wrap{
+  margin-bottom:1rem;
+  background:var(--bl3);
+  border:1px solid var(--bl5);
+  border-radius:10px;
+  padding:.7rem .9rem;
+}
+.xp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.xp-level{
+  font-family:var(--font-display);
+  font-size:16px;
+  letter-spacing:.06em;
+  color:var(--y);
+}
+.xp-pts{
+  font-family:var(--font-ui);
+  font-size:11px;
+  color:var(--gray3);
+  font-weight:700;
+}
+.xp-track{height:8px;background:var(--bl5);border-radius:4px;overflow:hidden}
+.xp-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--y),var(--y2));
+  border-radius:4px;
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+  box-shadow:var(--neon-y);
+}
 
-.progress-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:1rem}
-.ps-card{background:var(--color-background-secondary);border-radius:8px;padding:.6rem;text-align:center}
-.ps-num{font-size:20px;font-weight:700;color:var(--r)}
-.ps-label{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+/* ====== TOAST ====== */
+.toast{
+  position:fixed;
+  bottom:80px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--r);
+  color:#fff;
+  font-family:var(--font-display);
+  font-size:15px;
+  letter-spacing:.06em;
+  padding:.5rem 1.2rem;
+  border-radius:30px;
+  z-index:999;
+  opacity:0;
+  transition:all .3s;
+  pointer-events:none;
+  white-space:nowrap;
+  box-shadow:var(--neon-r);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ====== BOTTOM NAV (mobile) ====== */
+@media(max-width:640px){
+  .header{padding:.5rem .75rem}
+  .logo{font-size:24px}
+  .cal-day{min-height:44px}
+  .cal-dn{font-size:10px}
+  .pg{padding:.75rem}
+  .prod-grid{grid-template-columns:1fr}
+  .menu-accomp-grid{grid-template-columns:1fr}
+  .progress-summary{gap:.35rem}
+  .ps-num{font-size:26px}
+}
+
+/* ====== STREAK / BADGES ====== */
+.badges-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem}
+.badge-chip{
+  display:flex;
+  align-items:center;
+  gap:.3rem;
+  font-family:var(--font-ui);
+  font-size:10px;
+  font-weight:700;
+  padding:3px 8px;
+  border-radius:20px;
+  background:var(--bl4);
+  border:1px solid var(--bl5);
+  color:var(--gray3);
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.badge-chip.earned{border-color:var(--y);color:var(--y)}
+.badge-chip .bi{font-size:12px}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--bl5);margin:.8rem 0}
+
+/* FLOATING TAG */
+.floating-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:.3rem;
+  font-family:var(--font-ui);
+  font-size:10px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  padding:3px 10px;
+  border-radius:3px;
+}
 </style>
+</head>
+<body>
 
-<div class="nav">
-  <div class="ntab on" onclick="goTab('cron')">Cronograma</div>
-  <div class="ntab" onclick="goTab('prod')">Produtos</div>
-  <div class="ntab" onclick="goTab('copies')">Copies</div>
-  <div class="ntab" onclick="goTab('ads')">Impulsionamento</div>
+<div class="header">
+  <div>
+    <div class="logo">ZERO<span>17</span></div>
+    <div class="logo-sub">Made in Catancity</div>
+  </div>
+  <div class="header-badge">🔴 LIVE</div>
 </div>
 
-<!-- CRONOGRAMA -->
+<div class="nav">
+  <div class="ntab on" onclick="goTab('cron',this)"><span class="tab-icon">📅</span>Cronograma</div>
+  <div class="ntab" onclick="goTab('menu',this)"><span class="tab-icon">🍔</span>Cardápio</div>
+  <div class="ntab" onclick="goTab('prod',this)"><span class="tab-icon">🎯</span>Produtos</div>
+  <div class="ntab" onclick="goTab('copies',this)"><span class="tab-icon">✍️</span>Copies</div>
+  <div class="ntab" onclick="goTab('ads',this)"><span class="tab-icon">📢</span>Ads</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ============ CRONOGRAMA ============ -->
 <div class="pg on" id="pg-cron">
-  <div class="progress-summary">
-    <div class="ps-card"><div class="ps-num" id="cnt-total">0</div><div class="ps-label">tarefas totais</div></div>
-    <div class="ps-card"><div class="ps-num" id="cnt-done">0</div><div class="ps-label">concluídas</div></div>
-    <div class="ps-card"><div class="ps-num" id="cnt-pct">0%</div><div class="ps-label">progresso</div></div>
+  <div class="xp-bar-wrap">
+    <div class="xp-top">
+      <div class="xp-level" id="xp-level">RECRUTA</div>
+      <div class="xp-pts"><span id="xp-cur">0</span> / <span id="xp-max">100</span> XP</div>
+    </div>
+    <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+    <div class="badges-row" id="badges-row">
+      <div class="badge-chip" id="badge-first">⚡ Primeira Tarefa</div>
+      <div class="badge-chip" id="badge-10">🔥 10 Tarefas</div>
+      <div class="badge-chip" id="badge-day">✅ Dia Completo</div>
+      <div class="badge-chip" id="badge-launch">🚀 Lançamento</div>
+    </div>
   </div>
 
-  <div class="sec-label">Março / Abril 2025 — clique em um dia para ver as tarefas</div>
+  <div class="progress-summary">
+    <div class="ps-card"><div class="ps-num" id="cnt-total">0</div><div class="ps-label">Total</div></div>
+    <div class="ps-card"><div class="ps-num" id="cnt-done">0</div><div class="ps-label">Feitas</div></div>
+    <div class="ps-card"><div class="ps-num" id="cnt-pct">0%</div><div class="ps-label">Progresso</div></div>
+  </div>
+
+  <div class="sec-label">Mar / Abr 2025 — toque num dia para ver as tarefas</div>
   <div class="cal-header">
     <div class="cal-dh">Dom</div><div class="cal-dh">Seg</div><div class="cal-dh">Ter</div>
     <div class="cal-dh">Qua</div><div class="cal-dh">Qui</div><div class="cal-dh">Sex</div><div class="cal-dh">Sab</div>
@@ -151,24 +868,87 @@ body{font-family:system-ui,sans-serif;background:transparent;color:var(--color-t
   </div>
 </div>
 
-<!-- PRODUTOS -->
+<!-- ============ CARDÁPIO ============ -->
+<div class="pg" id="pg-menu">
+  <div class="menu-hero">
+    <div class="menu-hero-title">SMASH <span>MENU</span></div>
+    <div class="menu-hero-sub">Delivery • Catanduva • DDD 017</div>
+  </div>
+
+  <div class="menu-section-title">🍔 Smash Burgers</div>
+  <div class="menu-items" id="menu-burgers"></div>
+
+  <div class="menu-section-title">🍟 Acompanhamentos</div>
+  <div class="menu-accomp-grid" id="menu-accomp"></div>
+</div>
+
+<!-- ============ PRODUTOS ============ -->
 <div class="pg" id="pg-prod">
-  <div class="sec-label" style="margin-bottom:.7rem">8 produtos — clique para ver copies e estratégia de conteúdo</div>
+  <div class="sec-label" style="margin-bottom:.7rem">Estratégia de conteúdo por produto — toque para expandir</div>
   <div class="prod-grid" id="prod-grid"></div>
 </div>
 
-<!-- COPIES -->
+<!-- ============ COPIES ============ -->
 <div class="pg" id="pg-copies">
   <div id="copies-container"></div>
 </div>
 
-<!-- ADS -->
+<!-- ============ ADS ============ -->
 <div class="pg" id="pg-ads">
-  <div class="sec-label" style="margin-bottom:.7rem">Passo a passo completo de impulsionamento no Meta Ads</div>
+  <div class="sec-label" style="margin-bottom:.7rem">Passo a passo Meta Ads — toque para expandir</div>
   <div id="ads-container"></div>
 </div>
 
 <script>
+// ========== GAMIFICATION ==========
+var TASK_STATE = {};
+var SELECTED_KEY = null;
+var XP_LEVELS = [
+  {name:"RECRUTA",min:0,max:50},
+  {name:"CRIADOR",min:50,max:150},
+  {name:"GESTOR",min:150,max:300},
+  {name:"ESTRATEGISTA",min:300,max:500},
+  {name:"MESTRE 017",min:500,max:500}
+];
+
+function getTotalDone(){
+  var done=0;
+  Object.keys(CAL_TASKS).forEach(function(k){done+=(TASK_STATE[k]||[]).filter(Boolean).length;});
+  return done;
+}
+
+function updateXP(){
+  var done=getTotalDone();
+  var xp=done*10;
+  var lvl=XP_LEVELS[0];
+  for(var i=XP_LEVELS.length-1;i>=0;i--){if(xp>=XP_LEVELS[i].min){lvl=XP_LEVELS[i];break;}}
+  var pct=lvl.max===lvl.min?100:Math.min(100,Math.round((xp-lvl.min)/(lvl.max-lvl.min)*100));
+  document.getElementById("xp-level").textContent=lvl.name;
+  document.getElementById("xp-cur").textContent=xp;
+  document.getElementById("xp-max").textContent=lvl.max;
+  document.getElementById("xp-fill").style.width=pct+"%";
+  // badges
+  if(done>=1) document.getElementById("badge-first").classList.add("earned");
+  if(done>=10) document.getElementById("badge-10").classList.add("earned");
+  // check if any day is fully done
+  var dayDone=Object.keys(CAL_TASKS).some(function(k){
+    return CAL_TASKS[k] && TASK_STATE[k] && TASK_STATE[k].filter(Boolean).length===CAL_TASKS[k].tasks.length;
+  });
+  if(dayDone) document.getElementById("badge-day").classList.add("earned");
+  // check launch day done
+  if(TASK_STATE["25/03"] && CAL_TASKS["25/03"] && TASK_STATE["25/03"].filter(Boolean).length===CAL_TASKS["25/03"].tasks.length){
+    document.getElementById("badge-launch").classList.add("earned");
+  }
+}
+
+function showToast(msg){
+  var t=document.getElementById("toast");
+  t.textContent=msg;
+  t.classList.add("show");
+  setTimeout(function(){t.classList.remove("show");},2000);
+}
+
+// ========== CAL TASKS ==========
 var CAL_TASKS = {
   "23/03":{phase:"PRÉ-LANÇAMENTO",tasks:[
     {t:"Publicar story teaser fundo preto + countdown 48h",type:"r",tp:"Story"},
@@ -205,15 +985,15 @@ var CAL_TASKS = {
     {t:"Responder todos os comentários e DMs do dia anterior",type:"g",tp:"Engaj"}
   ]},
   "27/03":{phase:"SEMANA 1",tasks:[
-    {t:"Reels: apresentação do PCQ (Pão, Carne e Queijo) — direto ao ponto",type:"r",tp:"Reels"},
-    {t:"Story: 'Você que fala que não gosta de frescura vai amar o PCQ'",type:"r",tp:"Story"},
+    {t:"Reels: apresentação do PCQ Smash — direto ao ponto",type:"r",tp:"Reels"},
+    {t:"Story: 'Você que não gosta de frescura vai amar o PCQ'",type:"r",tp:"Story"},
     {t:"Carrossel feed: os ingredientes do smash, um por um",type:"y",tp:"Feed"}
   ]},
   "28/03":{phase:"SEMANA 1",tasks:[
     {t:"Reels sexta: 'É sexta em Catanduva. Você sabe o que tem que fazer.'",type:"r",tp:"Reels"},
     {t:"Story: promo sexta — frete grátis ou combo especial",type:"r",tp:"Story"},
     {t:"Anúncio conversão máxima sexta-sábado — R$ 150",type:"b",tp:"Ads"},
-    {t:"Feed: foto do Queijo Quente 42° derretendo",type:"y",tp:"Feed"}
+    {t:"Feed: foto do Queijo Quente 42' derretendo",type:"y",tp:"Feed"}
   ]},
   "29/03":{phase:"SEMANA 1",tasks:[
     {t:"Reels sábado: fila de pedidos saindo — 'A cidade pediu'",type:"r",tp:"Reels"},
@@ -227,7 +1007,7 @@ var CAL_TASKS = {
     {t:"Analisar métricas da semana: CPR, alcance, engajamento",type:"g",tp:"Análise"}
   ]},
   "31/03":{phase:"SEMANA 2",tasks:[
-    {t:"Reels: apresentação do Km7 — 'O quilômetro que você vai querer percorrer'",type:"r",tp:"Reels"},
+    {t:"Reels: apresentação do Km7 Smash — identidade local",type:"r",tp:"Reels"},
     {t:"Story: bastidores semana 2 começando",type:"r",tp:"Story"},
     {t:"Repostar UGC (clientes marcando a Zero17) nos stories",type:"r",tp:"Story"},
     {t:"Retargeting ativo: público que viu 75% dos vídeos da S1",type:"b",tp:"Ads"}
@@ -238,14 +1018,14 @@ var CAL_TASKS = {
     {t:"Reels: 'De onde vem o nome Feitiço?' — storytelling da marca",type:"r",tp:"Reels"}
   ]},
   "02/04":{phase:"SEMANA 2",tasks:[
-    {t:"Reels: apresentação da Rúcula — 'Pra quem acha que hambúrguer não tem personalidade'",type:"r",tp:"Reels"},
-    {t:"Feed: foto da Rúcula — aposta no público feminino",type:"y",tp:"Feed"},
-    {t:"Anúncio: segmentado mulheres 20-35 Catanduva — Rúcula",type:"b",tp:"Ads"}
+    {t:"Reels: apresentação do Catancity Smash — personalidade e estilo",type:"r",tp:"Reels"},
+    {t:"Feed: foto do Catancity — aposta no público exigente",type:"y",tp:"Feed"},
+    {t:"Anúncio: segmentado público 20-35 Catanduva — Catancity",type:"b",tp:"Ads"}
   ]},
   "03/04":{phase:"SEMANA 2",tasks:[
-    {t:"Reels: apresentação do Frango — 'Não é frango de ser frango'",type:"r",tp:"Reels"},
+    {t:"Reels: apresentação do Chicken 017 — 'Não é frango de ser frango'",type:"r",tp:"Reels"},
     {t:"Story ASMR frango na chapa",type:"r",tp:"Story"},
-    {t:"Anúncio sexta — combo R$ 5 off no Frango",type:"b",tp:"Ads"}
+    {t:"Anúncio sexta — combo R$ 5 off no Chicken 017",type:"b",tp:"Ads"}
   ]},
   "04/04":{phase:"SEMANA 2",tasks:[
     {t:"IG Live: pedindo ao vivo — interação com seguidores",type:"p",tp:"Live"},
@@ -255,10 +1035,10 @@ var CAL_TASKS = {
   "07/04":{phase:"SEMANA 3",tasks:[
     {t:"Reels: 'Catanduva tem Zero17. O 017 tem sabor.'",type:"r",tp:"Reels"},
     {t:"Lookalike ativo: similar a quem pediu na S1",type:"b",tp:"Ads"},
-    {t:"Feed: apresentação da Salada — o lado saudável do smash",type:"y",tp:"Feed"}
+    {t:"Feed: apresentação da Salada Smash — o lado equilibrado do smash",type:"y",tp:"Feed"}
   ]},
   "09/04":{phase:"SEMANA 3",tasks:[
-    {t:"Carrossel: 'Compare os 8 smash da Zero17' — guia do cardápio",type:"y",tp:"Feed"},
+    {t:"Carrossel: 'Compare os smash da Zero17' — guia do cardápio",type:"y",tp:"Feed"},
     {t:"Story: votação 'Qual você ainda não pediu?'",type:"r",tp:"Story"},
     {t:"Anúncio: carrossel de produtos — conversão",type:"b",tp:"Ads"}
   ]},
@@ -279,7 +1059,7 @@ var CAL_TASKS = {
   ]},
   "16/04":{phase:"SEMANA 4",tasks:[
     {t:"Feed: depoimento em destaque — cliente fiel",type:"y",tp:"Feed"},
-    {t:"Reels: Tradicional — 'Às vezes o clássico ganha'",type:"r",tp:"Reels"},
+    {t:"Reels: Tradicional Smash — 'Às vezes o clássico ganha'",type:"r",tp:"Reels"},
     {t:"Anúncio Tradicional para público que ainda não converteu",type:"b",tp:"Ads"}
   ]},
   "18/04":{phase:"SEMANA 4",tasks:[
@@ -303,80 +1083,82 @@ var DAYS_CONFIG = [
   {d:25,m:"Mar",key:"25/03",label:"Qua 25/03 — ABERTURA",event:true},
   {d:26,m:"Mar",key:"26/03",label:"Qui 26/03"},
   {d:27,m:"Mar",key:"27/03",label:"Sex 27/03"},
-  {d:28,m:"Mar",key:"28/03",label:"Sex 28/03"},
-  {d:29,m:"Mar",key:"29/03",label:"Sab 29/03"},
-  {d:30,m:"Mar",key:"30/03",label:"Dom 30/03"},
-  {d:31,m:"Mar",key:"31/03",label:"Seg 31/03"},
-  {d:1,m:"Abr",key:"01/04",label:"Ter 01/04"},
-  {d:2,m:"Abr",key:"02/04",label:"Qua 02/04"},
-  {d:3,m:"Abr",key:"03/04",label:"Qui 03/04"},
-  {d:4,m:"Abr",key:"04/04",label:"Sex 04/04"},
-  {d:5,m:"Abr",key:"05/04",label:"Sab 05/04"},
-  {d:6,m:"Abr",key:"06/04",label:"Dom 06/04"},
-  {d:7,m:"Abr",key:"07/04",label:"Seg 07/04"},
-  {d:8,m:"Abr",key:"08/04",label:"Ter 08/04"},
-  {d:9,m:"Abr",key:"09/04",label:"Qua 09/04"},
-  {d:10,m:"Abr",key:"10/04",label:"Qui 10/04"},
-  {d:11,m:"Abr",key:"11/04",label:"Sex 11/04"},
-  {d:12,m:"Abr",key:"12/04",label:"Sab 12/04"},
-  {d:13,m:"Abr",key:"13/04",label:"Dom 13/04"},
-  {d:14,m:"Abr",key:"14/04",label:"Seg 14/04"},
-  {d:15,m:"Abr",key:"15/04",label:"Ter 15/04"},
-  {d:16,m:"Abr",key:"16/04",label:"Qua 16/04"},
-  {d:17,m:"Abr",key:"17/04",label:"Qui 17/04"},
-  {d:18,m:"Abr",key:"18/04",label:"Sex 18/04"},
-  {d:19,m:"Abr",key:"19/04",label:"Sab 19/04"},
-  {d:20,m:"Abr",key:"20/04",label:"Dom 20/04"},
-  {d:21,m:"Abr",key:"21/04",label:"Seg 21/04"},
-  {d:22,m:"Abr",key:"22/04",label:"Ter 22/04"},
-  {d:23,m:"Abr",key:"23/04",label:"Qua 23/04 — LIVE SORTEIO",event:true}
+  {d:28,m:"Mar",key:"28/03",label:"Sab 28/03"},
+  {d:29,m:"Mar",key:"29/03",label:"Dom 29/03"},
+  {d:30,m:"Mar",key:"30/03",label:"Seg 30/03"},
+  {d:31,m:"Mar",key:"31/03",label:"Ter 31/03"},
+  {d:1,m:"Abr",key:"01/04",label:"Qua 01/04"},
+  {d:2,m:"Abr",key:"02/04",label:"Qui 02/04"},
+  {d:3,m:"Abr",key:"03/04",label:"Sex 03/04"},
+  {d:4,m:"Abr",key:"04/04",label:"Sab 04/04"},
+  {d:5,m:"Abr",key:"05/04",label:"Dom 05/04"},
+  {d:6,m:"Abr",key:"06/04",label:"Seg 06/04"},
+  {d:7,m:"Abr",key:"07/04",label:"Ter 07/04"},
+  {d:8,m:"Abr",key:"08/04",label:"Qua 08/04"},
+  {d:9,m:"Abr",key:"09/04",label:"Qui 09/04"},
+  {d:10,m:"Abr",key:"10/04",label:"Sex 10/04"},
+  {d:11,m:"Abr",key:"11/04",label:"Sab 11/04"},
+  {d:12,m:"Abr",key:"12/04",label:"Dom 12/04"},
+  {d:13,m:"Abr",key:"13/04",label:"Seg 13/04"},
+  {d:14,m:"Abr",key:"14/04",label:"Ter 14/04"},
+  {d:15,m:"Abr",key:"15/04",label:"Qua 15/04"},
+  {d:16,m:"Abr",key:"16/04",label:"Qui 16/04"},
+  {d:17,m:"Abr",key:"17/04",label:"Sex 17/04"},
+  {d:18,m:"Abr",key:"18/04",label:"Sab 18/04"},
+  {d:19,m:"Abr",key:"19/04",label:"Dom 19/04"},
+  {d:20,m:"Abr",key:"20/04",label:"Seg 20/04"},
+  {d:21,m:"Abr",key:"21/04",label:"Ter 21/04"},
+  {d:22,m:"Abr",key:"22/04",label:"Qua 22/04"},
+  {d:23,m:"Abr",key:"23/04",label:"Qui 23/04 — LIVE SORTEIO",event:true}
 ];
-
-var TASK_STATE = {};
-var SELECTED_KEY = null;
 
 function getTagsForDay(key){
   if(!CAL_TASKS[key]) return [];
-  var types = {};
+  var types={};
   CAL_TASKS[key].tasks.forEach(function(t){types[t.type]=1});
   return Object.keys(types);
 }
 
 function buildCal(){
-  var grid = document.getElementById("cal-grid");
-  var emptyStart = 0; // March 23 = Sunday(0)
-  for(var i=0;i<emptyStart;i++){
-    var e=document.createElement("div");e.className="cal-day empty";grid.appendChild(e);
-  }
+  var grid=document.getElementById("cal-grid");
+  // 23/03/2026 = SEGUNDA-FEIRA (col 1) → 1 célula vazia (domingo) antes do dia 23
+  var empty=document.createElement("div");
+  empty.className="cal-day empty";
+  grid.appendChild(empty);
   DAYS_CONFIG.forEach(function(dc){
     var div=document.createElement("div");
     div.className="cal-day"+(dc.event?" event-day":"");
     div.setAttribute("data-key",dc.key);
-    var allDone = TASK_STATE[dc.key] && CAL_TASKS[dc.key] &&
-      TASK_STATE[dc.key].filter(Boolean).length === CAL_TASKS[dc.key].tasks.length;
+    var allDone=TASK_STATE[dc.key]&&CAL_TASKS[dc.key]&&
+      TASK_STATE[dc.key].filter(Boolean).length===CAL_TASKS[dc.key].tasks.length;
     if(allDone) div.classList.add("checked");
     var tags=getTagsForDay(dc.key);
-    var tagsHtml = tags.map(function(tp){
-      return '<span class="ct ct-'+tp+'">'+{r:"Reels",y:"Feed",b:"Ads",g:"Config",p:"Live"}[tp]+'</span>';
+    var tagsHtml=tags.map(function(tp){
+      return '<span class="ct ct-'+tp+'">'+{r:"▶",y:"📷",b:"$",g:"⚙",p:"🔴"}[tp]+'</span>';
     }).join("");
     div.innerHTML='<div class="cal-dn">'+dc.d+' '+dc.m+'</div><div class="cal-tags">'+tagsHtml+'</div>';
-    div.onclick=function(){openDay(dc.key,dc.label,dc.phase||"");};
+    div.onclick=function(){openDay(dc.key,dc.label);};
     grid.appendChild(div);
   });
 }
 
-function openDay(key,label,phase){
+function openDay(key,label){
   SELECTED_KEY=key;
+  // deselect all
+  document.querySelectorAll(".cal-day").forEach(function(d){d.classList.remove("selected")});
+  var calDay=document.querySelector('[data-key="'+key+'"]');
+  if(calDay) calDay.classList.add("selected");
+
   var det=document.getElementById("day-detail");
   det.classList.add("on");
   document.getElementById("dd-title").textContent=label;
   var phaseMap={"23/03":"PRÉ-LANÇAMENTO","24/03":"PRÉ-LANÇAMENTO","25/03":"ABERTURA","23/04":"ENCERRAMENTO"};
-  var ph = phaseMap[key] || (CAL_TASKS[key]?CAL_TASKS[key].phase:"DIA");
+  var ph=phaseMap[key]||(CAL_TASKS[key]?CAL_TASKS[key].phase:"DIA");
   document.getElementById("dd-phase").textContent=ph;
   var list=document.getElementById("task-list");
   list.innerHTML="";
   if(!CAL_TASKS[key]){
-    list.innerHTML='<div style="font-size:12px;color:var(--color-text-secondary);padding:.3rem 0">Dia de descanso ou repostagem orgânica. Monitore comentários e DMs.</div>';
+    list.innerHTML='<div style="font-size:13px;color:var(--gray3);padding:.4rem 0">Dia de descanso ou repostagem orgânica. Monitore comentários e DMs.</div>';
     document.getElementById("day-prog").style.width="100%";
     document.getElementById("day-prog-txt").textContent="100%";
     return;
@@ -392,10 +1174,11 @@ function openDay(key,label,phase){
       (TASK_STATE[key][i]?"✓":"")+'</div>'+
       '<div class="task-text">'+task.t+'</div>'+
       '<span class="cpill '+typeColors[task.type]+' task-type">'+typeNames[task.type]+'</span>';
-    row.onclick=function(){toggleTask(key,i,row)};
+    row.onclick=function(){toggleTask(key,i,row);};
     list.appendChild(row);
   });
   updateDayProg(key);
+  det.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 
 function toggleTask(key,i,row){
@@ -404,13 +1187,15 @@ function toggleTask(key,i,row){
   var chk=row.querySelector(".chk");
   chk.classList.toggle("on",TASK_STATE[key][i]);
   chk.textContent=TASK_STATE[key][i]?"✓":"";
+  if(TASK_STATE[key][i]) showToast("+10 XP 🔥");
   updateDayProg(key);
   updateTotals();
-  var dc = DAYS_CONFIG.find(function(d){return d.key===key});
-  var calDay = document.querySelector('[data-key="'+key+'"]');
+  updateXP();
+  var calDay=document.querySelector('[data-key="'+key+'"]');
   if(calDay){
     var allDone=TASK_STATE[key].filter(Boolean).length===CAL_TASKS[key].tasks.length;
     calDay.classList.toggle("checked",allDone);
+    if(allDone) showToast("DIA COMPLETO! 🏆 +BADGE");
   }
 }
 
@@ -434,59 +1219,147 @@ function updateTotals(){
   document.getElementById("cnt-pct").textContent=Math.round(done/total*100)+"%";
 }
 
+// ========== CARDÁPIO ==========
+var MENU_BURGERS = [
+  {num:"01",name:"PCQ Smash",tag:"CLÁSSICO",featured:false,
+   ingr:["Pão brioche","Hambúrguer 100g","American cheese","Maionese da casa"],
+   desc:"Pão, Carne e Queijo. Sem enrolação, sem frescura. O smash essencial feito com excelência.",
+   preco:"R$ 24,99",duplo:"Duplo R$ 31,99"},
+  {num:"02",name:"Feitiço Smash",tag:"CARRO-CHEFE",featured:true,
+   ingr:["Pão brioche","Hambúrguer 100g smashado","Cebola branca fina","American cheese","Maionese da casa"],
+   desc:"O carro-chefe. Smash blend prensado com fatias finas de cebola branca — o feitiço que deu nome à cidade.",
+   preco:"R$ 26,99",duplo:"Duplo R$ 33,99"},
+  {num:"03",name:"Tradicional Smash",tag:"FAVORITO",featured:false,
+   ingr:["Pão brioche","Hambúrguer 100g","American cheese","Cebola branca em cubos","Sweet pickle","Maionese da casa"],
+   desc:"O equilíbrio perfeito. Cada ingrediente no lugar certo, do jeito que smash foi feito pra ser.",
+   preco:"R$ 26,99",duplo:"Duplo R$ 33,99"},
+  {num:"04",name:"Salada Smash",tag:"EQUILIBRADO",featured:false,
+   ingr:["Pão brioche","Hambúrguer 100g","American cheese","Sweet pickle","Cebola roxa","Tomate","Alface americana","Maionese da casa"],
+   desc:"Smash com consciência. Para quem quer sabor de verdade sem abrir mão do frescor.",
+   preco:"R$ 29,99",duplo:"Duplo R$ 36,99"},
+  {num:"05",name:"Km7 Smash",tag:"IDENTIDADE LOCAL",featured:false,
+   ingr:["Pão brioche","Hambúrguer 100g","American cheese","Requeijão","Bacon"],
+   desc:"Homenagem a Catanduva. Requeijão cremoso e bacon defumado — pra quem é daqui sabe.",
+   preco:"R$ 31,99",duplo:"Duplo R$ 38,99"},
+  {num:"06",name:"Catancity Smash",tag:"PREMIUM",featured:false,
+   ingr:["Pão brioche","Hambúrguer 100g","American cheese","Tomate seco","Rúcula","Requeijão","Alho frito","Maionese da casa"],
+   desc:"O smash com personalidade. Tomate seco, rúcula e alho frito — para quem exige o máximo.",
+   preco:"R$ 32,99",duplo:"Duplo R$ 39,99"},
+  {num:"07",name:"Chicken 017",tag:"FRANGO",featured:false,
+   ingr:["Pão brioche","Frango empanado","American cheese","Tomate","Alface americana","Maionese da casa"],
+   desc:"Não é frango de ser frango. Empanado na chapa, crocante e suculento, sem frescura.",
+   preco:"R$ 27,99",duplo:"Duplo R$ 34,99"},
+  {num:"08",name:"Queijo Quente 42'",tag:"VISUAL FORTE",featured:false,
+   ingr:["Pão brioche tostado","American cheese bem derretido"],
+   desc:"42 graus de queijo derretendo. O conteúdo mais fotogênico do cardápio.",
+   preco:"R$ 14,99",duplo:null}
+];
+
+var MENU_ACCOMP = [
+  {name:"Nuggets 10un",desc:"10 unidades crocantes, acompanha maionese da casa",preco:"R$ 18,99"},
+  {name:"Batata 150g",desc:"Batata frita crocante 150g",preco:"R$ 12,99"},
+  {name:"Batata Especial",desc:"Batata 250g com requeijão cremoso e bacon",preco:"R$ 21,99"}
+];
+
+function buildMenu(){
+  var burgers=document.getElementById("menu-burgers");
+  MENU_BURGERS.forEach(function(b,i){
+    var div=document.createElement("div");
+    div.className="menu-item"+(b.featured?" featured":"");
+    var ingrHtml=b.ingr.map(function(x){return '<span class="ingr-chip">'+x+'</span>';}).join("");
+    var duploHtml=b.duplo?'<div class="price-double">'+b.duplo+'</div>':"";
+    var tagHtml=b.featured?'<div class="menu-item-tag">'+b.tag+'</div>':"";
+    div.innerHTML=
+      '<div class="menu-item-head">'+
+        '<div class="menu-item-num">'+b.num+'</div>'+
+        '<div class="menu-item-info">'+
+          (b.featured?'<div class="menu-item-tag">'+b.tag+'</div>':'')+
+          '<div class="menu-item-name">'+b.name+'</div>'+
+          '<div class="menu-item-ingr">'+b.ingr.slice(0,3).join(" · ")+(b.ingr.length>3?" · ...":'')+'</div>'+
+        '</div>'+
+        '<div class="menu-item-prices">'+
+          (!b.featured?'<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;color:var(--r);letter-spacing:.06em;margin-bottom:2px">'+b.tag+'</div>':'')+
+          '<div class="price-single">'+b.preco+'</div>'+
+          duploHtml+
+        '</div>'+
+      '</div>'+
+      '<div class="menu-item-body">'+
+        '<div class="menu-item-desc">'+b.desc+'</div>'+
+        '<div class="ingr-list">'+ingrHtml+'</div>'+
+      '</div>';
+    div.querySelector(".menu-item-head").onclick=function(){
+      var isOpen=div.classList.contains("open");
+      document.querySelectorAll(".menu-item").forEach(function(m){m.classList.remove("open");});
+      if(!isOpen) div.classList.add("open");
+    };
+    burgers.appendChild(div);
+  });
+
+  var accomp=document.getElementById("menu-accomp");
+  MENU_ACCOMP.forEach(function(a){
+    var div=document.createElement("div");
+    div.className="accomp-card";
+    div.innerHTML='<div class="accomp-name">'+a.name+'</div>'+
+      '<div class="accomp-desc">'+a.desc+'</div>'+
+      '<div class="accomp-price">'+a.preco+'</div>';
+    accomp.appendChild(div);
+  });
+}
+
+// ========== PRODUTOS ==========
 var PRODUTOS = [
   {name:"Feitiço",num:"01",tag:"CARRO-CHEFE",
-   desc:"O hambúrguer que deu nome à cidade feitiço. Smash blend 100g com ingredientes que encantam. É o que define a Zero17. Lança primeiro, aparece mais.",
+   desc:"O hambúrguer que deu nome à cidade feitiço. Smash blend 100g com cebola branca fina e american cheese. É o que define a Zero17. Lança primeiro, aparece mais.",
    copies:[
      {label:"Reels / Story",head:"O Catanduva tem feitiço. E agora tem o Feitiço.",body:"Smash Blend 100g que vai prender você do primeiro ao último milímetro. Pede no delivery. Somente pelo 017."},
      {label:"Feed / Caption",head:"Não é hambúrguer. É feitiço.",body:"A cidade já tem encanto. Agora tem sabor. Feitiço Zero17 — smash blend prensado na chapa, no seu delivery, feito em Catanduva. #Zero17Burger #Feitiço #MadeInCatancity"},
      {label:"Anúncio Ads",head:"Catanduva, conhece o Feitiço?",body:"O smash mais aguardado da cidade chegou. Somente delivery. Clica no link e faz o primeiro pedido."}
    ],
    pills:["Seg lançamento","3 Reels na S1","Feed destaque","Anúncio hero"]},
-  {name:"Frango",num:"02",tag:"PÚBLICO AMPLO",
-   desc:"Para quem quer smash mas não abre mão do frango. Aposta para públicos mais conservadores e quem ainda não descobriu o smash.",
+  {name:"Chicken 017",num:"02",tag:"PÚBLICO AMPLO",
+   desc:"Para quem quer smash mas não abre mão do frango empanado. Aposta para públicos mais conservadores e quem ainda não descobriu o smash.",
    copies:[
-     {label:"Reels",head:"Frango não é opção B. É opção Zero17.",body:"Prensado na chapa igual smash, só que frangão. Crocante, suculento, sem frescura. Pede aí."},
-     {label:"Story / Ads",head:"Não é frango de ser frango.",body:"Zero17 faz o frango do jeito que você merece. Smash, chapa quente, sabor de verdade. Somente delivery em Catanduva."}
+     {label:"Reels",head:"Frango não é opção B. É opção Zero17.",body:"Empanado na chapa igual smash. Crocante, suculento, sem frescura. Pede aí."},
+     {label:"Story / Ads",head:"Não é frango de ser frango.",body:"Zero17 faz o frango do jeito que você merece. Chicken 017, chapa quente, sabor de verdade. Somente delivery em Catanduva."}
    ],
    pills:["Reels S2","Anúncio público amplo","Story ASMR"]},
   {name:"Km7",num:"03",tag:"IDENTIDADE LOCAL",
-   desc:"Nome que fala com Catanduva. Referência local cria pertencimento e identificação imediata com o público da cidade.",
+   desc:"Nome que fala com Catanduva. Requeijão e bacon. Referência local cria pertencimento e identificação imediata com o público da cidade.",
    copies:[
      {label:"Reels / Feed",head:"Km7. Você sabe onde fica.",body:"Zero17 homenageia Catanduva em cada detalhe. O Km7 é pra quem é daqui. Smash de identidade. Pede no delivery."},
      {label:"Caption",head:"Do 017, feito pro 017.",body:"O Km7 é mais que um lanche. É uma declaração de amor à cidade. Made in Catancity. #Zero17Burger #Km7 #Catanduva"}
    ],
    pills:["Feed S2","Story localismo","Ads geolocalizado"]},
   {name:"PCQ",num:"04",tag:"DIRETO AO PONTO",
-   desc:"Pão, Carne e Queijo. Sem enrolação. Fala com o público mais tradicional que quer o essencial feito muito bem.",
+   desc:"Pão, Carne e Queijo. Sem enrolação. Fala com o público mais tradicional que quer o essencial feito muito bem. A partir de R$ 24,99.",
    copies:[
      {label:"Reels",head:"PCQ. Três letras. Zero frescura.",body:"Pão, Carne, Queijo. Smash do jeito certo. Pra quem sabe o que quer sem precisar de manual. Pede pelo delivery."},
      {label:"Story / Ads",head:"Sem frescura, com sabor de verdade.",body:"O PCQ da Zero17 é pra quem respeita o básico feito com excelência. Smash Blend 100g. Somente delivery Catanduva."}
    ],
    pills:["Reels S1 quinta","Feed S2","Ads público masculino"]},
-  {name:"Queijo Quente 42°",num:"05",tag:"VISUAL FORTE",
-   desc:"42 graus de queijo derretendo. É o produto mais fotogênico do cardápio. Conteúdo visual de alto impacto — queijo escorrendo é o grande gatilho de engajamento.",
+  {name:"Queijo Quente 42'",num:"05",tag:"VISUAL FORTE",
+   desc:"42 graus de queijo derretendo. É o produto mais fotogênico do cardápio. Conteúdo visual de alto impacto — queijo escorrendo é o grande gatilho de engajamento. R$ 14,99.",
    copies:[
-     {label:"Reels ASMR",head:"42 graus de queijo. Zero arrependimento.",body:"O som do queijo derretendo na chapa da Zero17 vai fazer você salivar. Smash + queijo no ponto exato. Pede agora."},
-     {label:"Feed",head:"Esse queijo tá em 42°. E sua fome?",body:"O Queijo Quente 42° foi feito pra você que não consegue imaginar um smash sem queijo escorrendo em cada mordida. Delivery Catanduva. #Zero17Burger #QueijoQuente"}
+     {label:"Reels ASMR",head:"42 graus de queijo. Zero arrependimento.",body:"O som do queijo derretendo na chapa da Zero17 vai fazer você salivar. Chapa quente, queijo no ponto exato. Pede agora."},
+     {label:"Feed",head:"Esse queijo tá em 42'. E sua fome?",body:"O Queijo Quente 42' foi feito pra você que não consegue imaginar sem queijo escorrendo em cada mordida. Delivery Catanduva. #Zero17Burger #QueijoQuente"}
    ],
    pills:["Reels S1 sexta","Feed close-up","Anúncio visual"]},
   {name:"Tradicional",num:"06",tag:"FIDELIZAÇÃO",
-   desc:"Clássico sem erro. Para o público que quer confiabilidade. Aparece no conteúdo de fidelização — semana 4 e em datas recorrentes.",
+   desc:"Clássico sem erro. Para o público que quer confiabilidade. Cebola, sweet pickle, maionese. Aparece no conteúdo de fidelização — semana 4.",
    copies:[
      {label:"Reels / Story",head:"Às vezes o clássico ganha.",body:"O Tradicional Zero17 é pra quem sabe o que é bom sem precisar de surpresa. Smash de verdade, feito com cuidado. Pede aí."},
      {label:"Caption Feed",head:"Clássico não sai de moda.",body:"O Tradicional da Zero17 é o smash que você volta sempre. Porque clássico feito bem é difícil superar. Delivery Catanduva. #Zero17"}
    ],
    pills:["Feed S4","Retargeting clientes","Story fidelidade"]},
-  {name:"Rúcula",num:"07",tag:"PÚBLICO FEMININO",
-   desc:"Diferenciado. Fala com quem quer algo além do básico. Forte apelo ao público feminino e aos que procuram um smash com personalidade e visual elegante.",
+  {name:"Catancity",num:"07",tag:"PREMIUM",
+   desc:"Diferenciado. Tomate seco, rúcula, requeijão e alho frito. Fala com quem quer algo além do básico. Forte apelo visual e gastronômico.",
    copies:[
-     {label:"Reels",head:"Hambúrguer tem personalidade. O seu qual é?",body:"A Rúcula Zero17 é pra quem não tem medo de ser diferente. Smash cheio de atitude, com aquela rúcula que muda tudo. Delivery."},
-     {label:"Feed / Ads mulheres",head:"Não é salada. É a Rúcula Zero17.",body:"Smash com identidade própria. Pra quem gosta de hambúrguer mas exige mais. Made in Catancity. Pede no delivery."}
+     {label:"Reels",head:"Hambúrguer tem personalidade. O seu qual é?",body:"O Catancity Zero17 é pra quem não tem medo de ser diferente. Smash cheio de atitude, com aquela rúcula que muda tudo. Delivery."},
+     {label:"Feed / Ads",head:"Não é qualquer smash. É o Catancity.",body:"Tomate seco, rúcula, requeijão e alho frito. Smash com identidade própria. Made in Catancity. Pede no delivery."}
    ],
-   pills:["Reels S2","Ads mulheres 20-35","Feed diferenciado"]},
-  {name:"Salada",num:"08",tag:"PÚBLICO SAUDÁVEL",
-   desc:"Para quem quer smash mas se preocupa com equilíbrio. Abre um segmento diferente de público e diversifica o alcance da marca.",
+   pills:["Reels S2","Ads público exigente","Feed diferenciado"]},
+  {name:"Salada",num:"08",tag:"EQUILIBRADO",
+   desc:"Para quem quer smash mas se preocupa com equilíbrio. Cebola roxa, tomate, alface. Abre um segmento diferente de público.",
    copies:[
      {label:"Reels / Story",head:"Zero17 é pra todo mundo. Até pra você que 'tá de dieta'.",body:"A Salada Zero17 é o smash que deixa a consciência tranquila. Ingredientes frescos, sabor de verdade. Pede aí."},
      {label:"Feed",head:"Smash com consciência.",body:"Equilíbrio é uma escolha. A Salada Zero17 te dá o smash que você ama com os ingredientes que você respeita. Delivery Catanduva."}
@@ -496,21 +1369,21 @@ var PRODUTOS = [
 
 function buildProd(){
   var grid=document.getElementById("prod-grid");
-  PRODUTOS.forEach(function(p,i){
+  PRODUTOS.forEach(function(p){
     var card=document.createElement("div");
     card.className="prod-card";
     var copiesHtml=p.copies.map(function(c){
       return '<div class="copy-block"><div class="copy-label">'+c.label+'</div>'+
-        '<div class="copy-text"><strong>'+c.head+'</strong><br>'+c.body+'</div>'+
-        '</div>';
+        '<div class="copy-text"><strong>'+c.head+'</strong><br>'+c.body+'</div></div>';
     }).join("");
     var pillsHtml=p.pills.map(function(pl){
-      return '<span class="cpill ct-b cpill">'+pl+'</span>';
+      return '<span class="cpill ct-b">'+pl+'</span>';
     }).join("");
-    card.innerHTML='<div class="prod-top">'+
-      '<div class="prod-num">'+p.num+'</div>'+
-      '<div class="prod-name">'+p.name+'</div>'+
-      '<div class="prod-tag">'+p.tag+'</div>'+
+    card.innerHTML=
+      '<div class="prod-top">'+
+        '<div class="prod-num">'+p.num+'</div>'+
+        '<div class="prod-name">'+p.name+'</div>'+
+        '<div class="prod-tag">'+p.tag+'</div>'+
       '</div>'+
       '<div class="prod-body">'+
         '<div class="prod-desc">'+p.desc+'</div>'+
@@ -519,13 +1392,14 @@ function buildProd(){
       '</div>';
     card.onclick=function(){
       var isOpen=card.classList.contains("open");
-      document.querySelectorAll(".prod-card").forEach(function(c){c.classList.remove("open")});
+      document.querySelectorAll(".prod-card").forEach(function(c){c.classList.remove("open");});
       if(!isOpen) card.classList.add("open");
     };
     grid.appendChild(card);
   });
 }
 
+// ========== COPIES ==========
 var COPIES_DATA = [
   {section:"Abertura e Lançamento",items:[
     {phase:"DIA 1",fmt:"Reels / Stories",head:"Catanduva, acabou de nascer algo diferente aqui.",body:"Zero17 Burger abriu. Smash de verdade, feito no 017, entregue na sua porta. Somente delivery. Clica no link e faz o primeiro pedido.",cta:"MADE IN CATANCITY"},
@@ -540,12 +1414,12 @@ var COPIES_DATA = [
     {phase:"SÁBADO",fmt:"Story",head:"A galera de Catanduva entendeu.",body:"Enquanto todo mundo fala de hambúrguer, a gente faz o smash de verdade. Zero17. Pede hoje.",cta:"LINK NA BIO"}
   ]},
   {section:"Engajamento e Comunidade",items:[
-    {phase:"GERAL",fmt:"Story interativo",head:"Qual vai ser o seu? Vota aí.",body:"Feitiço, Km7, PCQ, Queijo Quente, Frango, Rúcula, Salada ou Tradicional. Oito smash. Uma escolha. Qual o seu?",cta:"RESPONDE NOS STORIES"},
+    {phase:"GERAL",fmt:"Story interativo",head:"Qual vai ser o seu? Vota aí.",body:"Feitiço, Km7, PCQ, Queijo Quente 42', Chicken 017, Catancity, Salada ou Tradicional. Oito smash. Uma escolha. Qual o seu?",cta:"RESPONDE NOS STORIES"},
     {phase:"GERAL",fmt:"Caption engajamento",head:"Marca aqui quem precisa experimentar Zero17.",body:"A gente sabe que tem alguém na sua lista que ainda não conhece smash de verdade. Faz um favor pra essa pessoa e marca ela agora. #Zero17Burger",cta:"MARCA UM AMIGO"},
     {phase:"GERAL",fmt:"Story UGC",head:"Você postou. A gente viu.",body:"Todo cliente Zero17 que marca a gente nos stories a gente reposte. Então posta, que a Catancity precisa saber.",cta:"MARCA @ZERO17BURGER"},
     {phase:"RETARG",fmt:"Anúncio retargeting",head:"Você viu. Agora experimenta.",body:"Você passou pelo nosso perfil. A Zero17 continua aqui, o smash continua perfeito. Primeira vez — fala no direct antes de fechar.",cta:"QUERO MEU DESCONTO"}
   ]},
-  {section:"Identidade e Pertencimento (Made in Catancity)",items:[
+  {section:"Identidade e Pertencimento",items:[
     {phase:"MARCA",fmt:"Feed / Reels",head:"A Cidade Feitiço agora tem o sabor que merecia.",body:"Zero17 nasceu do 017. Do DDD que identifica, que carrega sotaque e orgulho. Feitos aqui, pra quem é daqui. Made in Catancity.",cta:"ZERO17BURGER"},
     {phase:"MARCA",fmt:"Caption institucional",head:"Do 017, feito pro 017.",body:"A Zero17 não é só uma hamburgueria. É o orgulho de Catanduva estampado em cada detalhe. Smash. Eat. Repeat. #MadeInCatancity #Zero17 #Catanduva #017",cta:"FEITOS PRA VOCÊ"},
     {phase:"MARCA",fmt:"Story",head:"Catanduva sempre teve feitiço. Agora tem smash.",body:"A Zero17 é sua. Somos daqui, pra você, feitos com orgulho de ser do 017. Pede no delivery e representa.",cta:"SMASH. EAT. REPEAT."}
@@ -564,14 +1438,17 @@ var COPIES_DATA = [
 function buildCopies(){
   var cont=document.getElementById("copies-container");
   COPIES_DATA.forEach(function(sec){
-    var secDiv=document.createElement("div");secDiv.className="copy-section";
+    var secDiv=document.createElement("div");
+    secDiv.className="copy-section";
     secDiv.innerHTML='<div class="copy-section-title">'+sec.section+'</div>';
     sec.items.forEach(function(item){
-      var card=document.createElement("div");card.className="big-copy";
-      card.innerHTML='<div class="bc-meta"><span class="bc-phase">'+item.phase+'</span><span class="bc-format">'+item.fmt+'</span></div>'+
+      var card=document.createElement("div");
+      card.className="big-copy";
+      card.innerHTML=
+        '<div class="bc-meta"><span class="bc-phase">'+item.phase+'</span><span class="bc-format">'+item.fmt+'</span></div>'+
         '<div class="bc-head">'+item.head+'</div>'+
         '<div class="bc-body">'+item.body+'</div>'+
-        '<div class="bc-cta">'+item.cta+' &rarr;</div>';
+        '<div class="bc-cta">'+item.cta+' →</div>';
       card.onclick=function(){sendPrompt("Me dê mais variações dessa copy Zero17: "+item.head)};
       secDiv.appendChild(card);
     });
@@ -579,6 +1456,7 @@ function buildCopies(){
   });
 }
 
+// ========== ADS ==========
 var ADS_STEPS = [
   {num:1,title:"Configuração da conta e pixel",badge:"ANTES DE TUDO",badgeColor:"#1a1a1a",rows:[
     {label:"Conta Ads:",val:"Criar no Meta Business Manager — business.facebook.com. Vincular página do Instagram e Facebook da Zero17."},
@@ -613,7 +1491,7 @@ var ADS_STEPS = [
     {label:"Semana 2 (S2):",val:"R$ 420-560 — engajamento + retargeting S1. Lookalike ativo."},
     {label:"Semana 3 (S3):",val:"R$ 385-490 — escalada de público. Anúncios de produto individual."},
     {label:"Semana 4 (S4):",val:"R$ 315-420 — fidelização. Retargeting de quem pediu 1x."},
-    {label:"Total mês:",val:"R$ 1.820 a R$ 2.310. Escale o que performar acima de R$ 15 CPR e pause o que passar R$ 25 CPR."},
+    {label:"Total mês:",val:"R$ 1.820 a R$ 2.310. Escale o que performar abaixo de R$ 15 CPR e pause o que passar R$ 25 CPR."},
     {label:"Métricas alvo:",val:"CPR (custo/pedido) até R$ 15. CTR acima de 1,5%. CPC abaixo de R$ 1,50. Frequência < 4 em 7 dias."}
   ]},
   {num:6,title:"Otimização contínua",badge:"SEMPRE",badgeColor:"#22c55e",rows:[
@@ -628,30 +1506,43 @@ var ADS_STEPS = [
 function buildAds(){
   var cont=document.getElementById("ads-container");
   ADS_STEPS.forEach(function(step){
-    var div=document.createElement("div");div.className="ads-step";
+    var div=document.createElement("div");
+    div.className="ads-step";
     var rowsHtml=step.rows.map(function(r){
       return '<div class="ads-row"><div class="ads-row-label">'+r.label+'</div><div>'+r.val+'</div></div>';
     }).join("");
-    div.innerHTML='<div class="ads-step-head" onclick="this.parentElement.classList.toggle(\'open\')">'+
-      '<div class="ads-step-num">'+step.num+'</div>'+
-      '<div class="ads-step-title">'+step.title+'</div>'+
-      '<div class="ads-step-badge" style="background:'+step.badgeColor+';color:'+(step.badgeColor==='#fbba00'?'#111':'#fff')+'">'+step.badge+'</div>'+
+    div.innerHTML=
+      '<div class="ads-step-head" onclick="this.parentElement.classList.toggle(\'open\')">'+
+        '<div class="ads-step-num">'+step.num+'</div>'+
+        '<div class="ads-step-title">'+step.title+'</div>'+
+        '<div class="ads-step-badge" style="background:'+step.badgeColor+';color:'+(step.badgeColor==='#fbba00'?'#111':'#fff')+'">'+step.badge+'</div>'+
       '</div>'+
       '<div class="ads-step-body">'+rowsHtml+'</div>';
     cont.appendChild(div);
   });
 }
 
-function goTab(id){
-  document.querySelectorAll(".pg").forEach(function(p){p.classList.remove("on")});
-  document.querySelectorAll(".ntab").forEach(function(t){t.classList.remove("on")});
+function goTab(id,el){
+  document.querySelectorAll(".pg").forEach(function(p){p.classList.remove("on");});
+  document.querySelectorAll(".ntab").forEach(function(t){t.classList.remove("on");});
   document.getElementById("pg-"+id).classList.add("on");
-  event.target.classList.add("on");
+  if(el) el.classList.add("on");
 }
 
+// sendPrompt stub for when not in Claude
+function sendPrompt(txt){
+  if(typeof window.sendPrompt==="function"){window.sendPrompt(txt);}
+  else{console.log("sendPrompt:",txt);}
+}
+
+// INIT
 buildCal();
+buildMenu();
 buildProd();
 buildCopies();
 buildAds();
 updateTotals();
+updateXP();
 </script>
+</body>
+</html>
