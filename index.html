@@ -1,0 +1,657 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--r:#e30613;--y:#fbba00;--bl:#111111;--wh:#fff;--gray1:#f7f6f3;--gray2:#eeede9;--gray3:#888}
+body{font-family:system-ui,sans-serif;background:transparent;color:var(--color-text-primary)}
+
+.nav{display:flex;background:var(--bl);overflow-x:auto;scrollbar-width:none;border-bottom:3px solid var(--r)}
+.nav::-webkit-scrollbar{display:none}
+.ntab{flex-shrink:0;padding:.55rem .9rem;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.4);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .15s;white-space:nowrap}
+.ntab.on{color:var(--y);border-bottom-color:var(--y)}
+.ntab:hover:not(.on){color:#fff}
+
+.pg{display:none;padding:1rem}
+.pg.on{display:block}
+
+.sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray3);margin-bottom:.5rem}
+
+/* CRONOGRAMA */
+.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px}
+.cal-dh{font-size:10px;font-weight:700;text-align:center;color:var(--gray3);padding:.2rem 0;text-transform:uppercase}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day{min-height:54px;border-radius:6px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding:4px 5px;cursor:pointer;transition:border-color .15s;position:relative}
+.cal-day:hover{border-color:var(--r)}
+.cal-day.empty{background:transparent;border-color:transparent;cursor:default}
+.cal-day.today{border:1.5px solid var(--r)}
+.cal-day.checked{background:#e30613;border-color:#e30613}
+.cal-day.checked .cal-dn{color:#fff}
+.cal-day.checked .cal-tags{opacity:.8}
+.cal-day.checked::after{content:"✓";position:absolute;top:3px;right:5px;font-size:11px;font-weight:700;color:#fff}
+.cal-day.event-day{border-left:2.5px solid var(--y)}
+.cal-dn{font-size:11px;font-weight:700;color:var(--color-text-primary);margin-bottom:2px}
+.cal-tags{display:flex;flex-wrap:wrap;gap:2px}
+.ct{font-size:8px;padding:1px 4px;border-radius:3px;font-weight:700;white-space:nowrap}
+.ct-r{background:#e30613;color:#fff}
+.ct-y{background:#fbba00;color:#111}
+.ct-b{background:#1a1a1a;color:#fbba00}
+.ct-g{background:#22c55e;color:#fff}
+.ct-p{background:#7c3aed;color:#fff}
+
+.day-detail{margin-top:1rem;border-radius:10px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);overflow:hidden;display:none}
+.day-detail.on{display:block}
+.dd-head{background:var(--bl);padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.dd-title{font-size:14px;font-weight:700;color:#fff}
+.dd-phase{font-size:10px;font-weight:700;background:var(--r);color:#fff;padding:2px 8px;border-radius:10px;letter-spacing:.05em}
+.dd-body{padding:.8rem 1rem}
+.task-list{display:flex;flex-direction:column;gap:.4rem}
+.task{display:flex;align-items:flex-start;gap:.5rem;padding:.4rem .5rem;border-radius:6px;cursor:pointer;transition:background .1s}
+.task:hover{background:var(--gray1)}
+.task.done{opacity:.55}
+.task.done .task-text{text-decoration:line-through}
+.chk{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--color-border-secondary);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;transition:all .15s;background:var(--color-background-primary)}
+.chk.on{background:var(--r);border-color:var(--r);color:#fff}
+.task-text{font-size:12px;line-height:1.4;color:var(--color-text-primary)}
+.task-type{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-left:auto;flex-shrink:0;align-self:center}
+
+.prog-bar{margin-top:.8rem;display:flex;align-items:center;gap:.6rem}
+.prog-track{flex:1;height:6px;background:var(--gray2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--r);border-radius:3px;transition:width .3s}
+.prog-text{font-size:11px;font-weight:700;color:var(--r);min-width:28px;text-align:right}
+
+/* PRODUTOS */
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.prod-card{border-radius:10px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);overflow:hidden;cursor:pointer;transition:border-color .15s}
+.prod-card:hover{border-color:var(--r)}
+.prod-card.open{border-color:var(--r);border-width:1.5px}
+.prod-top{background:var(--bl);padding:.6rem .8rem;display:flex;align-items:center;gap:.5rem}
+.prod-num{font-size:18px;font-weight:700;color:var(--y);min-width:22px;line-height:1;font-family:Georgia,serif}
+.prod-name{font-size:13px;font-weight:700;color:#fff;line-height:1.2}
+.prod-tag{font-size:9px;font-weight:700;background:var(--r);color:#fff;padding:1px 6px;border-radius:8px;margin-left:auto;white-space:nowrap}
+.prod-body{padding:.7rem .8rem;display:none}
+.prod-card.open .prod-body{display:block}
+.prod-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:.6rem}
+.copy-block{background:var(--gray1);border-radius:6px;padding:.5rem .6rem;margin-bottom:.4rem;border-left:2px solid var(--r)}
+.copy-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--r);margin-bottom:.2rem}
+.copy-text{font-size:11px;line-height:1.5;color:var(--color-text-primary)}
+.copy-cta{font-size:10px;font-weight:700;color:var(--gray3);margin-top:.2rem}
+.content-pills{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.5rem}
+.cpill{font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px}
+
+/* COPIES GERAIS */
+.copy-section{margin-bottom:1rem}
+.copy-section-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:.4rem;padding-bottom:.3rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.big-copy{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:8px;padding:.7rem .8rem;margin-bottom:.35rem;cursor:pointer;transition:border-color .15s}
+.big-copy:hover{border-color:var(--r)}
+.bc-meta{display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem}
+.bc-phase{font-size:9px;font-weight:700;letter-spacing:.05em;background:var(--bl);color:var(--y);padding:2px 7px;border-radius:8px}
+.bc-format{font-size:9px;color:var(--gray3);font-weight:600}
+.bc-head{font-size:13px;font-weight:700;color:var(--color-text-primary);margin-bottom:.2rem;line-height:1.3}
+.bc-body{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.bc-cta{font-size:10px;font-weight:700;color:var(--r);margin-top:.2rem}
+
+/* ADS */
+.ads-step{border-radius:10px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);margin-bottom:.6rem;overflow:hidden}
+.ads-step-head{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;cursor:pointer}
+.ads-step-num{width:26px;height:26px;border-radius:50%;background:var(--r);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ads-step-title{font-size:13px;font-weight:700;color:var(--color-text-primary);flex:1}
+.ads-step-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap}
+.ads-step-body{display:none;padding:.6rem .9rem;border-top:0.5px solid var(--color-border-tertiary);background:var(--gray1)}
+.ads-step.open .ads-step-body{display:block}
+.ads-row{display:flex;gap:.5rem;margin-bottom:.4rem;align-items:flex-start;font-size:12px;line-height:1.4;color:var(--color-text-primary)}
+.ads-row-label{font-weight:700;color:var(--r);min-width:90px;flex-shrink:0}
+.seg-grid{display:grid;grid-template-columns:1fr 1fr;gap:.35rem;margin-top:.4rem}
+.seg-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:6px;padding:.45rem .55rem}
+.seg-name{font-size:10px;font-weight:700;color:var(--color-text-primary);margin-bottom:.15rem}
+.seg-val{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
+
+.budget-vis{display:flex;gap:.3rem;height:60px;align-items:flex-end;margin:.5rem 0}
+.bv-bar{flex:1;border-radius:4px 4px 0 0;background:var(--r);position:relative;display:flex;align-items:center;justify-content:center}
+.bv-label{font-size:8px;font-weight:700;color:#fff;writing-mode:horizontal-tb}
+.bv-week{font-size:9px;font-weight:700;color:var(--gray3);text-align:center;margin-top:3px}
+
+.progress-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:1rem}
+.ps-card{background:var(--color-background-secondary);border-radius:8px;padding:.6rem;text-align:center}
+.ps-num{font-size:20px;font-weight:700;color:var(--r)}
+.ps-label{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+</style>
+
+<div class="nav">
+  <div class="ntab on" onclick="goTab('cron')">Cronograma</div>
+  <div class="ntab" onclick="goTab('prod')">Produtos</div>
+  <div class="ntab" onclick="goTab('copies')">Copies</div>
+  <div class="ntab" onclick="goTab('ads')">Impulsionamento</div>
+</div>
+
+<!-- CRONOGRAMA -->
+<div class="pg on" id="pg-cron">
+  <div class="progress-summary">
+    <div class="ps-card"><div class="ps-num" id="cnt-total">0</div><div class="ps-label">tarefas totais</div></div>
+    <div class="ps-card"><div class="ps-num" id="cnt-done">0</div><div class="ps-label">concluídas</div></div>
+    <div class="ps-card"><div class="ps-num" id="cnt-pct">0%</div><div class="ps-label">progresso</div></div>
+  </div>
+
+  <div class="sec-label">Março / Abril 2025 — clique em um dia para ver as tarefas</div>
+  <div class="cal-header">
+    <div class="cal-dh">Dom</div><div class="cal-dh">Seg</div><div class="cal-dh">Ter</div>
+    <div class="cal-dh">Qua</div><div class="cal-dh">Qui</div><div class="cal-dh">Sex</div><div class="cal-dh">Sab</div>
+  </div>
+  <div class="cal-grid" id="cal-grid"></div>
+  <div class="day-detail" id="day-detail">
+    <div class="dd-head">
+      <div class="dd-title" id="dd-title">Dia</div>
+      <div class="dd-phase" id="dd-phase">Fase</div>
+    </div>
+    <div class="dd-body">
+      <div class="task-list" id="task-list"></div>
+      <div class="prog-bar">
+        <div class="prog-track"><div class="prog-fill" id="day-prog" style="width:0%"></div></div>
+        <div class="prog-text" id="day-prog-txt">0%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUTOS -->
+<div class="pg" id="pg-prod">
+  <div class="sec-label" style="margin-bottom:.7rem">8 produtos — clique para ver copies e estratégia de conteúdo</div>
+  <div class="prod-grid" id="prod-grid"></div>
+</div>
+
+<!-- COPIES -->
+<div class="pg" id="pg-copies">
+  <div id="copies-container"></div>
+</div>
+
+<!-- ADS -->
+<div class="pg" id="pg-ads">
+  <div class="sec-label" style="margin-bottom:.7rem">Passo a passo completo de impulsionamento no Meta Ads</div>
+  <div id="ads-container"></div>
+</div>
+
+<script>
+var CAL_TASKS = {
+  "23/03":{phase:"PRÉ-LANÇAMENTO",tasks:[
+    {t:"Publicar story teaser fundo preto + countdown 48h",type:"r",tp:"Story"},
+    {t:"Post feed: 'Algo vem aí. 017.' — logo minimalista fundo preto",type:"y",tp:"Feed"},
+    {t:"Ativar anúncio de awareness: logo + 'Em breve em Catanduva'",type:"b",tp:"Ads"},
+    {t:"Configurar pixel Meta no link de delivery",type:"b",tp:"Ads"},
+    {t:"Otimizar perfil IG: bio, foto, destaque 'Campanha Grátis'",type:"g",tp:"Config"},
+    {t:"Confirmar Google Business com endereço e horário",type:"g",tp:"Config"},
+    {t:"Gravar vídeo bastidores: cozinha, ingredientes, chapa",type:"r",tp:"Produção"}
+  ]},
+  "24/03":{phase:"PRÉ-LANÇAMENTO",tasks:[
+    {t:"Reels bastidores cozinha: 'Amanhã começa. Tá preparado?'",type:"r",tp:"Reels"},
+    {t:"Story countdown: '24 horas. Smash. Eat. Repeat.'",type:"r",tp:"Story"},
+    {t:"Impulsionar story countdown — R$ 40 (alcance Catanduva)",type:"b",tp:"Ads"},
+    {t:"Story interativo: enquete 'Qual vai ser o seu primeiro?'",type:"r",tp:"Story"},
+    {t:"Publicar card campanha GRÁTIS: 1 ano de hambúrguer",type:"y",tp:"Feed"},
+    {t:"Ativar anúncio campanha GRÁTIS — R$ 50",type:"b",tp:"Ads"}
+  ]},
+  "25/03":{phase:"ABERTURA",tasks:[
+    {t:"ABERTURA: Reels de impacto — hambúrguer saindo da chapa",type:"r",tp:"Reels"},
+    {t:"Story ao vivo: 'Abriu! Faz o pedido agora'",type:"r",tp:"Story"},
+    {t:"Post feed: 'ZERO17 ABRIU. Made in Catancity.'",type:"y",tp:"Feed"},
+    {t:"Ativar anúncio conversão delivery — R$ 120 (budget máx)",type:"b",tp:"Ads"},
+    {t:"Impulsionar campanha GRÁTIS — R$ 80",type:"b",tp:"Ads"},
+    {t:"Reels 2: ASMR smash sendo prensado na chapa",type:"r",tp:"Reels"},
+    {t:"Repostar primeiros clientes nos stories",type:"r",tp:"Story"},
+    {t:"Story 'Feitiço': apresentação do carro-chefe",type:"y",tp:"Story"},
+    {t:"Salvar todas as interações para criar público personalizado",type:"b",tp:"Ads"}
+  ]},
+  "26/03":{phase:"SEMANA 1",tasks:[
+    {t:"Reels: 'Conhece o Feitiço? Testa e me fala'",type:"r",tp:"Reels"},
+    {t:"Story: depoimento do 1° cliente + produto na mão",type:"r",tp:"Story"},
+    {t:"Feed: foto profissional do Blend 100g com copy de lançamento",type:"y",tp:"Feed"},
+    {t:"Responder todos os comentários e DMs do dia anterior",type:"g",tp:"Engaj"}
+  ]},
+  "27/03":{phase:"SEMANA 1",tasks:[
+    {t:"Reels: apresentação do PCQ (Pão, Carne e Queijo) — direto ao ponto",type:"r",tp:"Reels"},
+    {t:"Story: 'Você que fala que não gosta de frescura vai amar o PCQ'",type:"r",tp:"Story"},
+    {t:"Carrossel feed: os ingredientes do smash, um por um",type:"y",tp:"Feed"}
+  ]},
+  "28/03":{phase:"SEMANA 1",tasks:[
+    {t:"Reels sexta: 'É sexta em Catanduva. Você sabe o que tem que fazer.'",type:"r",tp:"Reels"},
+    {t:"Story: promo sexta — frete grátis ou combo especial",type:"r",tp:"Story"},
+    {t:"Anúncio conversão máxima sexta-sábado — R$ 150",type:"b",tp:"Ads"},
+    {t:"Feed: foto do Queijo Quente 42° derretendo",type:"y",tp:"Feed"}
+  ]},
+  "29/03":{phase:"SEMANA 1",tasks:[
+    {t:"Reels sábado: fila de pedidos saindo — 'A cidade pediu'",type:"r",tp:"Reels"},
+    {t:"Story: bastidores intenso do sábado na cozinha",type:"r",tp:"Story"},
+    {t:"Anúncio budget máximo sábado — R$ 150",type:"b",tp:"Ads"},
+    {t:"Repostar stories de clientes o dia todo",type:"r",tp:"Story"}
+  ]},
+  "30/03":{phase:"SEMANA 1",tasks:[
+    {t:"Story dominical: 'Você participou da campanha grátis?'",type:"r",tp:"Story"},
+    {t:"Feed: compilado semana 1 — 'A Zero17 chegou'",type:"y",tp:"Feed"},
+    {t:"Analisar métricas da semana: CPR, alcance, engajamento",type:"g",tp:"Análise"}
+  ]},
+  "31/03":{phase:"SEMANA 2",tasks:[
+    {t:"Reels: apresentação do Km7 — 'O quilômetro que você vai querer percorrer'",type:"r",tp:"Reels"},
+    {t:"Story: bastidores semana 2 começando",type:"r",tp:"Story"},
+    {t:"Repostar UGC (clientes marcando a Zero17) nos stories",type:"r",tp:"Story"},
+    {t:"Retargeting ativo: público que viu 75% dos vídeos da S1",type:"b",tp:"Ads"}
+  ]},
+  "01/04":{phase:"SEMANA 2",tasks:[
+    {t:"Carrossel: 'O processo do smash' — do blend à entrega",type:"y",tp:"Feed"},
+    {t:"Story: votação 'Qual o próximo smash da semana?'",type:"r",tp:"Story"},
+    {t:"Reels: 'De onde vem o nome Feitiço?' — storytelling da marca",type:"r",tp:"Reels"}
+  ]},
+  "02/04":{phase:"SEMANA 2",tasks:[
+    {t:"Reels: apresentação da Rúcula — 'Pra quem acha que hambúrguer não tem personalidade'",type:"r",tp:"Reels"},
+    {t:"Feed: foto da Rúcula — aposta no público feminino",type:"y",tp:"Feed"},
+    {t:"Anúncio: segmentado mulheres 20-35 Catanduva — Rúcula",type:"b",tp:"Ads"}
+  ]},
+  "03/04":{phase:"SEMANA 2",tasks:[
+    {t:"Reels: apresentação do Frango — 'Não é frango de ser frango'",type:"r",tp:"Reels"},
+    {t:"Story ASMR frango na chapa",type:"r",tp:"Story"},
+    {t:"Anúncio sexta — combo R$ 5 off no Frango",type:"b",tp:"Ads"}
+  ]},
+  "04/04":{phase:"SEMANA 2",tasks:[
+    {t:"IG Live: pedindo ao vivo — interação com seguidores",type:"p",tp:"Live"},
+    {t:"Anúncio sábado budget máximo",type:"b",tp:"Ads"},
+    {t:"Story: reação dos clientes que ganharam primeiro",type:"r",tp:"Story"}
+  ]},
+  "07/04":{phase:"SEMANA 3",tasks:[
+    {t:"Reels: 'Catanduva tem Zero17. O 017 tem sabor.'",type:"r",tp:"Reels"},
+    {t:"Lookalike ativo: similar a quem pediu na S1",type:"b",tp:"Ads"},
+    {t:"Feed: apresentação da Salada — o lado saudável do smash",type:"y",tp:"Feed"}
+  ]},
+  "09/04":{phase:"SEMANA 3",tasks:[
+    {t:"Carrossel: 'Compare os 8 smash da Zero17' — guia do cardápio",type:"y",tp:"Feed"},
+    {t:"Story: votação 'Qual você ainda não pediu?'",type:"r",tp:"Story"},
+    {t:"Anúncio: carrossel de produtos — conversão",type:"b",tp:"Ads"}
+  ]},
+  "10/04":{phase:"SEMANA 3",tasks:[
+    {t:"Reels: 'A equipe por trás da Zero17' — humanização da marca",type:"r",tp:"Reels"},
+    {t:"Story: 'Made in Catancity — somos daqui, feitos pra você'",type:"y",tp:"Story"},
+    {t:"Feed: foto institucional — cozinha + identidade visual",type:"y",tp:"Feed"}
+  ]},
+  "11/04":{phase:"SEMANA 3",tasks:[
+    {t:"Anúncio sexta+sábado conversão máxima",type:"b",tp:"Ads"},
+    {t:"Reels: 'Qual a diferença entre smash e hambúrguer comum?'",type:"r",tp:"Reels"},
+    {t:"Promo combo sexta — post + story + ads",type:"y",tp:"Feed"}
+  ]},
+  "14/04":{phase:"SEMANA 4",tasks:[
+    {t:"Reels: '3 semanas de Zero17 — obrigado Catanduva'",type:"r",tp:"Reels"},
+    {t:"Retargeting: quem pediu 1x — oferta 2° pedido",type:"b",tp:"Ads"},
+    {t:"Story: 'Quem ainda não pediu — o que falta?'",type:"r",tp:"Story"}
+  ]},
+  "16/04":{phase:"SEMANA 4",tasks:[
+    {t:"Feed: depoimento em destaque — cliente fiel",type:"y",tp:"Feed"},
+    {t:"Reels: Tradicional — 'Às vezes o clássico ganha'",type:"r",tp:"Reels"},
+    {t:"Anúncio Tradicional para público que ainda não converteu",type:"b",tp:"Ads"}
+  ]},
+  "18/04":{phase:"SEMANA 4",tasks:[
+    {t:"Reels sexta: 'Toda sexta é dia de Zero17 em Catanduva'",type:"r",tp:"Reels"},
+    {t:"Anúncio conversão sexta+sábado",type:"b",tp:"Ads"},
+    {t:"Story: lembrete campanha grátis — últimos dias",type:"y",tp:"Story"}
+  ]},
+  "23/04":{phase:"ENCERRAMENTO",tasks:[
+    {t:"IG LIVE: sorteio do 1 ano de hambúrguer grátis",type:"p",tp:"Live"},
+    {t:"Reels: 'Um mês de Zero17 — balanço e agradecimento'",type:"r",tp:"Reels"},
+    {t:"Feed: post oficial do ganhador da campanha",type:"y",tp:"Feed"},
+    {t:"Anunciar nova promoção de fidelidade pós-campanha",type:"r",tp:"Story"},
+    {t:"Story: convite para o 2° mês — 'Só o começo'",type:"y",tp:"Story"},
+    {t:"Análise final: métricas do mês, ROI, pedidos, seguidores",type:"g",tp:"Análise"}
+  ]}
+};
+
+var DAYS_CONFIG = [
+  {d:23,m:"Mar",key:"23/03",label:"Seg 23/03",event:true},
+  {d:24,m:"Mar",key:"24/03",label:"Ter 24/03",event:true},
+  {d:25,m:"Mar",key:"25/03",label:"Qua 25/03 — ABERTURA",event:true},
+  {d:26,m:"Mar",key:"26/03",label:"Qui 26/03"},
+  {d:27,m:"Mar",key:"27/03",label:"Sex 27/03"},
+  {d:28,m:"Mar",key:"28/03",label:"Sex 28/03"},
+  {d:29,m:"Mar",key:"29/03",label:"Sab 29/03"},
+  {d:30,m:"Mar",key:"30/03",label:"Dom 30/03"},
+  {d:31,m:"Mar",key:"31/03",label:"Seg 31/03"},
+  {d:1,m:"Abr",key:"01/04",label:"Ter 01/04"},
+  {d:2,m:"Abr",key:"02/04",label:"Qua 02/04"},
+  {d:3,m:"Abr",key:"03/04",label:"Qui 03/04"},
+  {d:4,m:"Abr",key:"04/04",label:"Sex 04/04"},
+  {d:5,m:"Abr",key:"05/04",label:"Sab 05/04"},
+  {d:6,m:"Abr",key:"06/04",label:"Dom 06/04"},
+  {d:7,m:"Abr",key:"07/04",label:"Seg 07/04"},
+  {d:8,m:"Abr",key:"08/04",label:"Ter 08/04"},
+  {d:9,m:"Abr",key:"09/04",label:"Qua 09/04"},
+  {d:10,m:"Abr",key:"10/04",label:"Qui 10/04"},
+  {d:11,m:"Abr",key:"11/04",label:"Sex 11/04"},
+  {d:12,m:"Abr",key:"12/04",label:"Sab 12/04"},
+  {d:13,m:"Abr",key:"13/04",label:"Dom 13/04"},
+  {d:14,m:"Abr",key:"14/04",label:"Seg 14/04"},
+  {d:15,m:"Abr",key:"15/04",label:"Ter 15/04"},
+  {d:16,m:"Abr",key:"16/04",label:"Qua 16/04"},
+  {d:17,m:"Abr",key:"17/04",label:"Qui 17/04"},
+  {d:18,m:"Abr",key:"18/04",label:"Sex 18/04"},
+  {d:19,m:"Abr",key:"19/04",label:"Sab 19/04"},
+  {d:20,m:"Abr",key:"20/04",label:"Dom 20/04"},
+  {d:21,m:"Abr",key:"21/04",label:"Seg 21/04"},
+  {d:22,m:"Abr",key:"22/04",label:"Ter 22/04"},
+  {d:23,m:"Abr",key:"23/04",label:"Qua 23/04 — LIVE SORTEIO",event:true}
+];
+
+var TASK_STATE = {};
+var SELECTED_KEY = null;
+
+function getTagsForDay(key){
+  if(!CAL_TASKS[key]) return [];
+  var types = {};
+  CAL_TASKS[key].tasks.forEach(function(t){types[t.type]=1});
+  return Object.keys(types);
+}
+
+function buildCal(){
+  var grid = document.getElementById("cal-grid");
+  var emptyStart = 0; // March 23 = Sunday(0)
+  for(var i=0;i<emptyStart;i++){
+    var e=document.createElement("div");e.className="cal-day empty";grid.appendChild(e);
+  }
+  DAYS_CONFIG.forEach(function(dc){
+    var div=document.createElement("div");
+    div.className="cal-day"+(dc.event?" event-day":"");
+    div.setAttribute("data-key",dc.key);
+    var allDone = TASK_STATE[dc.key] && CAL_TASKS[dc.key] &&
+      TASK_STATE[dc.key].filter(Boolean).length === CAL_TASKS[dc.key].tasks.length;
+    if(allDone) div.classList.add("checked");
+    var tags=getTagsForDay(dc.key);
+    var tagsHtml = tags.map(function(tp){
+      return '<span class="ct ct-'+tp+'">'+{r:"Reels",y:"Feed",b:"Ads",g:"Config",p:"Live"}[tp]+'</span>';
+    }).join("");
+    div.innerHTML='<div class="cal-dn">'+dc.d+' '+dc.m+'</div><div class="cal-tags">'+tagsHtml+'</div>';
+    div.onclick=function(){openDay(dc.key,dc.label,dc.phase||"");};
+    grid.appendChild(div);
+  });
+}
+
+function openDay(key,label,phase){
+  SELECTED_KEY=key;
+  var det=document.getElementById("day-detail");
+  det.classList.add("on");
+  document.getElementById("dd-title").textContent=label;
+  var phaseMap={"23/03":"PRÉ-LANÇAMENTO","24/03":"PRÉ-LANÇAMENTO","25/03":"ABERTURA","23/04":"ENCERRAMENTO"};
+  var ph = phaseMap[key] || (CAL_TASKS[key]?CAL_TASKS[key].phase:"DIA");
+  document.getElementById("dd-phase").textContent=ph;
+  var list=document.getElementById("task-list");
+  list.innerHTML="";
+  if(!CAL_TASKS[key]){
+    list.innerHTML='<div style="font-size:12px;color:var(--color-text-secondary);padding:.3rem 0">Dia de descanso ou repostagem orgânica. Monitore comentários e DMs.</div>';
+    document.getElementById("day-prog").style.width="100%";
+    document.getElementById("day-prog-txt").textContent="100%";
+    return;
+  }
+  if(!TASK_STATE[key]) TASK_STATE[key]=[];
+  CAL_TASKS[key].tasks.forEach(function(task,i){
+    if(TASK_STATE[key][i]===undefined) TASK_STATE[key][i]=false;
+    var row=document.createElement("div");
+    row.className="task"+(TASK_STATE[key][i]?" done":"");
+    var typeColors={r:"ct-r",y:"ct-y",b:"ct-b",g:"ct-g",p:"ct-p"};
+    var typeNames={r:"Reels/Story",y:"Feed",b:"Ads",g:"Config",p:"Live"};
+    row.innerHTML='<div class="chk'+(TASK_STATE[key][i]?" on":"")+'">'+
+      (TASK_STATE[key][i]?"✓":"")+'</div>'+
+      '<div class="task-text">'+task.t+'</div>'+
+      '<span class="cpill '+typeColors[task.type]+' task-type">'+typeNames[task.type]+'</span>';
+    row.onclick=function(){toggleTask(key,i,row)};
+    list.appendChild(row);
+  });
+  updateDayProg(key);
+}
+
+function toggleTask(key,i,row){
+  TASK_STATE[key][i]=!TASK_STATE[key][i];
+  row.classList.toggle("done",TASK_STATE[key][i]);
+  var chk=row.querySelector(".chk");
+  chk.classList.toggle("on",TASK_STATE[key][i]);
+  chk.textContent=TASK_STATE[key][i]?"✓":"";
+  updateDayProg(key);
+  updateTotals();
+  var dc = DAYS_CONFIG.find(function(d){return d.key===key});
+  var calDay = document.querySelector('[data-key="'+key+'"]');
+  if(calDay){
+    var allDone=TASK_STATE[key].filter(Boolean).length===CAL_TASKS[key].tasks.length;
+    calDay.classList.toggle("checked",allDone);
+  }
+}
+
+function updateDayProg(key){
+  if(!CAL_TASKS[key]) return;
+  var total=CAL_TASKS[key].tasks.length;
+  var done=(TASK_STATE[key]||[]).filter(Boolean).length;
+  var pct=Math.round(done/total*100);
+  document.getElementById("day-prog").style.width=pct+"%";
+  document.getElementById("day-prog-txt").textContent=pct+"%";
+}
+
+function updateTotals(){
+  var total=0,done=0;
+  Object.keys(CAL_TASKS).forEach(function(key){
+    total+=CAL_TASKS[key].tasks.length;
+    done+=(TASK_STATE[key]||[]).filter(Boolean).length;
+  });
+  document.getElementById("cnt-total").textContent=total;
+  document.getElementById("cnt-done").textContent=done;
+  document.getElementById("cnt-pct").textContent=Math.round(done/total*100)+"%";
+}
+
+var PRODUTOS = [
+  {name:"Feitiço",num:"01",tag:"CARRO-CHEFE",
+   desc:"O hambúrguer que deu nome à cidade feitiço. Smash blend 100g com ingredientes que encantam. É o que define a Zero17. Lança primeiro, aparece mais.",
+   copies:[
+     {label:"Reels / Story",head:"O Catanduva tem feitiço. E agora tem o Feitiço.",body:"Smash Blend 100g que vai prender você do primeiro ao último milímetro. Pede no delivery. Somente pelo 017."},
+     {label:"Feed / Caption",head:"Não é hambúrguer. É feitiço.",body:"A cidade já tem encanto. Agora tem sabor. Feitiço Zero17 — smash blend prensado na chapa, no seu delivery, feito em Catanduva. #Zero17Burger #Feitiço #MadeInCatancity"},
+     {label:"Anúncio Ads",head:"Catanduva, conhece o Feitiço?",body:"O smash mais aguardado da cidade chegou. Somente delivery. Clica no link e faz o primeiro pedido."}
+   ],
+   pills:["Seg lançamento","3 Reels na S1","Feed destaque","Anúncio hero"]},
+  {name:"Frango",num:"02",tag:"PÚBLICO AMPLO",
+   desc:"Para quem quer smash mas não abre mão do frango. Aposta para públicos mais conservadores e quem ainda não descobriu o smash.",
+   copies:[
+     {label:"Reels",head:"Frango não é opção B. É opção Zero17.",body:"Prensado na chapa igual smash, só que frangão. Crocante, suculento, sem frescura. Pede aí."},
+     {label:"Story / Ads",head:"Não é frango de ser frango.",body:"Zero17 faz o frango do jeito que você merece. Smash, chapa quente, sabor de verdade. Somente delivery em Catanduva."}
+   ],
+   pills:["Reels S2","Anúncio público amplo","Story ASMR"]},
+  {name:"Km7",num:"03",tag:"IDENTIDADE LOCAL",
+   desc:"Nome que fala com Catanduva. Referência local cria pertencimento e identificação imediata com o público da cidade.",
+   copies:[
+     {label:"Reels / Feed",head:"Km7. Você sabe onde fica.",body:"Zero17 homenageia Catanduva em cada detalhe. O Km7 é pra quem é daqui. Smash de identidade. Pede no delivery."},
+     {label:"Caption",head:"Do 017, feito pro 017.",body:"O Km7 é mais que um lanche. É uma declaração de amor à cidade. Made in Catancity. #Zero17Burger #Km7 #Catanduva"}
+   ],
+   pills:["Feed S2","Story localismo","Ads geolocalizado"]},
+  {name:"PCQ",num:"04",tag:"DIRETO AO PONTO",
+   desc:"Pão, Carne e Queijo. Sem enrolação. Fala com o público mais tradicional que quer o essencial feito muito bem.",
+   copies:[
+     {label:"Reels",head:"PCQ. Três letras. Zero frescura.",body:"Pão, Carne, Queijo. Smash do jeito certo. Pra quem sabe o que quer sem precisar de manual. Pede pelo delivery."},
+     {label:"Story / Ads",head:"Sem frescura, com sabor de verdade.",body:"O PCQ da Zero17 é pra quem respeita o básico feito com excelência. Smash Blend 100g. Somente delivery Catanduva."}
+   ],
+   pills:["Reels S1 quinta","Feed S2","Ads público masculino"]},
+  {name:"Queijo Quente 42°",num:"05",tag:"VISUAL FORTE",
+   desc:"42 graus de queijo derretendo. É o produto mais fotogênico do cardápio. Conteúdo visual de alto impacto — queijo escorrendo é o grande gatilho de engajamento.",
+   copies:[
+     {label:"Reels ASMR",head:"42 graus de queijo. Zero arrependimento.",body:"O som do queijo derretendo na chapa da Zero17 vai fazer você salivar. Smash + queijo no ponto exato. Pede agora."},
+     {label:"Feed",head:"Esse queijo tá em 42°. E sua fome?",body:"O Queijo Quente 42° foi feito pra você que não consegue imaginar um smash sem queijo escorrendo em cada mordida. Delivery Catanduva. #Zero17Burger #QueijoQuente"}
+   ],
+   pills:["Reels S1 sexta","Feed close-up","Anúncio visual"]},
+  {name:"Tradicional",num:"06",tag:"FIDELIZAÇÃO",
+   desc:"Clássico sem erro. Para o público que quer confiabilidade. Aparece no conteúdo de fidelização — semana 4 e em datas recorrentes.",
+   copies:[
+     {label:"Reels / Story",head:"Às vezes o clássico ganha.",body:"O Tradicional Zero17 é pra quem sabe o que é bom sem precisar de surpresa. Smash de verdade, feito com cuidado. Pede aí."},
+     {label:"Caption Feed",head:"Clássico não sai de moda.",body:"O Tradicional da Zero17 é o smash que você volta sempre. Porque clássico feito bem é difícil superar. Delivery Catanduva. #Zero17"}
+   ],
+   pills:["Feed S4","Retargeting clientes","Story fidelidade"]},
+  {name:"Rúcula",num:"07",tag:"PÚBLICO FEMININO",
+   desc:"Diferenciado. Fala com quem quer algo além do básico. Forte apelo ao público feminino e aos que procuram um smash com personalidade e visual elegante.",
+   copies:[
+     {label:"Reels",head:"Hambúrguer tem personalidade. O seu qual é?",body:"A Rúcula Zero17 é pra quem não tem medo de ser diferente. Smash cheio de atitude, com aquela rúcula que muda tudo. Delivery."},
+     {label:"Feed / Ads mulheres",head:"Não é salada. É a Rúcula Zero17.",body:"Smash com identidade própria. Pra quem gosta de hambúrguer mas exige mais. Made in Catancity. Pede no delivery."}
+   ],
+   pills:["Reels S2","Ads mulheres 20-35","Feed diferenciado"]},
+  {name:"Salada",num:"08",tag:"PÚBLICO SAUDÁVEL",
+   desc:"Para quem quer smash mas se preocupa com equilíbrio. Abre um segmento diferente de público e diversifica o alcance da marca.",
+   copies:[
+     {label:"Reels / Story",head:"Zero17 é pra todo mundo. Até pra você que 'tá de dieta'.",body:"A Salada Zero17 é o smash que deixa a consciência tranquila. Ingredientes frescos, sabor de verdade. Pede aí."},
+     {label:"Feed",head:"Smash com consciência.",body:"Equilíbrio é uma escolha. A Salada Zero17 te dá o smash que você ama com os ingredientes que você respeita. Delivery Catanduva."}
+   ],
+   pills:["Feed S3","Story equilibrado","Ads saudável"]}
+];
+
+function buildProd(){
+  var grid=document.getElementById("prod-grid");
+  PRODUTOS.forEach(function(p,i){
+    var card=document.createElement("div");
+    card.className="prod-card";
+    var copiesHtml=p.copies.map(function(c){
+      return '<div class="copy-block"><div class="copy-label">'+c.label+'</div>'+
+        '<div class="copy-text"><strong>'+c.head+'</strong><br>'+c.body+'</div>'+
+        '</div>';
+    }).join("");
+    var pillsHtml=p.pills.map(function(pl){
+      return '<span class="cpill ct-b cpill">'+pl+'</span>';
+    }).join("");
+    card.innerHTML='<div class="prod-top">'+
+      '<div class="prod-num">'+p.num+'</div>'+
+      '<div class="prod-name">'+p.name+'</div>'+
+      '<div class="prod-tag">'+p.tag+'</div>'+
+      '</div>'+
+      '<div class="prod-body">'+
+        '<div class="prod-desc">'+p.desc+'</div>'+
+        copiesHtml+
+        '<div class="content-pills">'+pillsHtml+'</div>'+
+      '</div>';
+    card.onclick=function(){
+      var isOpen=card.classList.contains("open");
+      document.querySelectorAll(".prod-card").forEach(function(c){c.classList.remove("open")});
+      if(!isOpen) card.classList.add("open");
+    };
+    grid.appendChild(card);
+  });
+}
+
+var COPIES_DATA = [
+  {section:"Abertura e Lançamento",items:[
+    {phase:"DIA 1",fmt:"Reels / Stories",head:"Catanduva, acabou de nascer algo diferente aqui.",body:"Zero17 Burger abriu. Smash de verdade, feito no 017, entregue na sua porta. Somente delivery. Clica no link e faz o primeiro pedido.",cta:"MADE IN CATANCITY"},
+    {phase:"DIA 1",fmt:"Feed Caption",head:"Não é hambúrguer. É Zero17.",body:"A Cidade Feitiço agora tem o sabor que merecia. Zero17 Burger — Made in Catancity. Smash blend 100g, somente delivery. Link na bio. #Zero17Burger #Catanduva #SmashBurger #MadeInCatancity #Delivery017",cta:"LINK NA BIO"},
+    {phase:"DIA 1",fmt:"Anúncio conversão",head:"Catanduva, o smash chegou.",body:"Zero17 Burger abriu hoje. Smash blend 100g feito em Catanduva, entregue direto pra você. Só delivery. Primeiro pedido?",cta:"PEDIR AGORA"},
+    {phase:"TEASER",fmt:"Story D-2",head:"Algo vem aí. 017.",body:"Zero17 Burger. Em 48 horas, Catanduva muda de nível. Segue aí e fica de olho.",cta:"ATIVAR NOTIFICAÇÕES"}
+  ]},
+  {section:"Sextas e Fins de Semana",items:[
+    {phase:"SEXTA",fmt:"Reels",head:"É sexta em Catanduva. Você sabe o que tem que fazer.",body:"Smash Burger. Blend 100g. Queijo derretendo. Pão dourado. Sem desculpa pra não pedir.",cta:"PEDIR ZERO17"},
+    {phase:"SEXTA",fmt:"Story / Ads",head:"Sua sexta tá incompleta sem isso.",body:"Zero17 Burger no delivery. Chega rápido, vai embora rápido do prato. Aproveita que é sexta.",cta:"CLICA E PEDE"},
+    {phase:"SÁBADO",fmt:"Reels",head:"Sábado é dia de smash. Sem negociação.",body:"Zero17 Burger tá aqui. Delivery em Catanduva. A cidade pediu, a chapa respondeu.",cta:"PEDE AGORA"},
+    {phase:"SÁBADO",fmt:"Story",head:"A galera de Catanduva entendeu.",body:"Enquanto todo mundo fala de hambúrguer, a gente faz o smash de verdade. Zero17. Pede hoje.",cta:"LINK NA BIO"}
+  ]},
+  {section:"Engajamento e Comunidade",items:[
+    {phase:"GERAL",fmt:"Story interativo",head:"Qual vai ser o seu? Vota aí.",body:"Feitiço, Km7, PCQ, Queijo Quente, Frango, Rúcula, Salada ou Tradicional. Oito smash. Uma escolha. Qual o seu?",cta:"RESPONDE NOS STORIES"},
+    {phase:"GERAL",fmt:"Caption engajamento",head:"Marca aqui quem precisa experimentar Zero17.",body:"A gente sabe que tem alguém na sua lista que ainda não conhece smash de verdade. Faz um favor pra essa pessoa e marca ela agora. #Zero17Burger",cta:"MARCA UM AMIGO"},
+    {phase:"GERAL",fmt:"Story UGC",head:"Você postou. A gente viu.",body:"Todo cliente Zero17 que marca a gente nos stories a gente reposte. Então posta, que a Catancity precisa saber.",cta:"MARCA @ZERO17BURGER"},
+    {phase:"RETARG",fmt:"Anúncio retargeting",head:"Você viu. Agora experimenta.",body:"Você passou pelo nosso perfil. A Zero17 continua aqui, o smash continua perfeito. Primeira vez — fala no direct antes de fechar.",cta:"QUERO MEU DESCONTO"}
+  ]},
+  {section:"Identidade e Pertencimento (Made in Catancity)",items:[
+    {phase:"MARCA",fmt:"Feed / Reels",head:"A Cidade Feitiço agora tem o sabor que merecia.",body:"Zero17 nasceu do 017. Do DDD que identifica, que carrega sotaque e orgulho. Feitos aqui, pra quem é daqui. Made in Catancity.",cta:"ZERO17BURGER"},
+    {phase:"MARCA",fmt:"Caption institucional",head:"Do 017, feito pro 017.",body:"A Zero17 não é só uma hamburgueria. É o orgulho de Catanduva estampado em cada detalhe. Smash. Eat. Repeat. #MadeInCatancity #Zero17 #Catanduva #017",cta:"FEITOS PRA VOCÊ"},
+    {phase:"MARCA",fmt:"Story",head:"Catanduva sempre teve feitiço. Agora tem smash.",body:"A Zero17 é sua. Somos daqui, pra você, feitos com orgulho de ser do 017. Pede no delivery e representa.",cta:"SMASH. EAT. REPEAT."}
+  ]},
+  {section:"Campanha 1 Ano Grátis",items:[
+    {phase:"CAMPANHA",fmt:"Feed / Story Ads",head:"01 ano de hambúrguer GRÁTIS. Não é clickbait.",body:"Zero17 tá abrindo e vai premiar com 1 smash por semana durante 1 ano inteiro. Somente delivery. Segue + compartilha o story + marca 1 amigo. Simples assim.",cta:"QUERO PARTICIPAR"},
+    {phase:"CAMPANHA",fmt:"Urgência semana 2",head:"A campanha tá rolando. Você ainda não participou?",body:"Já tem centenas participando do 1 ano de hambúrguer grátis. Só seguir, compartilhar e marcar um amigo. O sorteio é ao vivo em 23/04.",cta:"ENTRA AGORA"},
+    {phase:"CAMPANHA",fmt:"Encerramento",head:"Última semana. Sorteio em 23/04 ao vivo.",body:"Um ano de smash grátis. Todo mês. Toda semana. 52 vezes. O sorteio acontece ao vivo no Instagram. Ainda dá tempo de participar.",cta:"CORRE QUE FECHA"}
+  ]},
+  {section:"Fidelização e Retenção",items:[
+    {phase:"S4",fmt:"Retargeting pedido",head:"Você gostou. A gente sabe.",body:"Você pediu Zero17 uma vez. Isso significa que você tem bom gosto. Que tal fechar o segundo? A chapa tá quente aqui.",cta:"PEDE DE NOVO"},
+    {phase:"S4",fmt:"Mês 1",head:"1 mês de Zero17. Muito obrigado, Catanduva.",body:"Um mês de smash. De chapa quente. De entrega no delivery. De clientes virando fãs. Isso é só o começo do que vai ser a Zero17 em Catanduva.",cta:"SMASH. EAT. REPEAT."}
+  ]}
+];
+
+function buildCopies(){
+  var cont=document.getElementById("copies-container");
+  COPIES_DATA.forEach(function(sec){
+    var secDiv=document.createElement("div");secDiv.className="copy-section";
+    secDiv.innerHTML='<div class="copy-section-title">'+sec.section+'</div>';
+    sec.items.forEach(function(item){
+      var card=document.createElement("div");card.className="big-copy";
+      card.innerHTML='<div class="bc-meta"><span class="bc-phase">'+item.phase+'</span><span class="bc-format">'+item.fmt+'</span></div>'+
+        '<div class="bc-head">'+item.head+'</div>'+
+        '<div class="bc-body">'+item.body+'</div>'+
+        '<div class="bc-cta">'+item.cta+' &rarr;</div>';
+      card.onclick=function(){sendPrompt("Me dê mais variações dessa copy Zero17: "+item.head)};
+      secDiv.appendChild(card);
+    });
+    cont.appendChild(secDiv);
+  });
+}
+
+var ADS_STEPS = [
+  {num:1,title:"Configuração da conta e pixel",badge:"ANTES DE TUDO",badgeColor:"#1a1a1a",rows:[
+    {label:"Conta Ads:",val:"Criar no Meta Business Manager — business.facebook.com. Vincular página do Instagram e Facebook da Zero17."},
+    {label:"Pixel:",val:"Instalar Pixel do Meta no link de delivery (iFood/site). Rastreia eventos: visualização, clique, pedido iniciado."},
+    {label:"Catálogo:",val:"Criar catálogo de produtos no Meta Commerce Manager com os 8 smash — útil para anúncios dinâmicos futuros."},
+    {label:"WhatsApp:",val:"Vincular WhatsApp Business à conta Meta para anúncios com CTA 'Enviar mensagem'."}
+  ]},
+  {num:2,title:"Segmentação principal — Abertura",badge:"SEMANA 1",badgeColor:"#e30613",rows:[
+    {label:"Localização:",val:"Catanduva + raio 20km (cidades na rota de delivery: Pindorama, Tabapuã, Ariranha, Novais)"},
+    {label:"Idade:",val:"18 a 44 anos — foco 22-35 para maior conversão em delivery"},
+    {label:"Interesses:",val:"Hambúrguer, gastronomia, iFood, Rappi, fast food, delivery, churrasco, comida brasileira"},
+    {label:"Comportamento:",val:"Compradores online frequentes, usuários de apps de delivery, dispositivos móveis"},
+    {label:"Orçamento:",val:"R$ 80-120/dia na semana 1. Distribuir: 60% conversão, 25% campanha grátis, 15% awareness"},
+    {label:"Objetivo:",val:"Tráfego para link de delivery OU conversão (se pixel configurado). Priorizar conversão desde o dia 1."}
+  ]},
+  {num:3,title:"Formatos e criativos por objetivo",badge:"TODOS",badgeColor:"#555",rows:[
+    {label:"Reels Ads:",val:"Vídeo 9:16, 15-30s. Produto em ação: smash prensando, queijo derretendo, entrega chegando. Sem logo no início — produto em destaque nos primeiros 3 segundos."},
+    {label:"Stories Ads:",val:"Card campanha GRÁTIS e promoções. Fonte impactante, fundo preto, texto em amarelo/vermelho. CTA direto: 'Pedir agora' ou 'Participar'."},
+    {label:"Feed Carrossel:",val:"5 slides: produto 1, ingredientes, depoimento, promoção, CTA. Segura atenção mais tempo."},
+    {label:"Collection Ads:",val:"Semana 3+. Catálogo de produtos com destaque de vídeo. Usuário desliza e vê todos os smash."},
+    {label:"Msg/WhatsApp:",val:"CTA 'Enviar mensagem' para WhatsApp Business. Excelente para quem prefere pedir por chat."}
+  ]},
+  {num:4,title:"Públicos personalizados e retargeting",badge:"SEMANA 2-4",badgeColor:"#7c3aed",rows:[
+    {label:"Público 1:",val:"Quem assistiu 75%+ dos vídeos da semana 1 → anúncio de conversão com oferta ('primeira vez com desconto no direct')"},
+    {label:"Público 2:",val:"Quem visitou o perfil ou clicou no link → lembrete de pedido + prova social (depoimento)"},
+    {label:"Público 3:",val:"Quem pediu 1x (via pixel) → fidelização: '2° pedido com benefício', Smash. Eat. Repeat."},
+    {label:"Lookalike:",val:"Semana 2: criar público lookalike (1-3%) baseado em quem interagiu. Expandir alcance para perfis similares na região."},
+    {label:"Exclusão:",val:"Excluir quem já pediu 2x+ dos anúncios de conversão — direcionar para público novo e frescos."}
+  ]},
+  {num:5,title:"Budget mensal e distribuição",badge:"PLANEJAMENTO",badgeColor:"#fbba00",rows:[
+    {label:"Semana 1 (S1):",val:"R$ 700-840 — máxima exposição no lançamento. Prioridade absoluta."},
+    {label:"Semana 2 (S2):",val:"R$ 420-560 — engajamento + retargeting S1. Lookalike ativo."},
+    {label:"Semana 3 (S3):",val:"R$ 385-490 — escalada de público. Anúncios de produto individual."},
+    {label:"Semana 4 (S4):",val:"R$ 315-420 — fidelização. Retargeting de quem pediu 1x."},
+    {label:"Total mês:",val:"R$ 1.820 a R$ 2.310. Escale o que performar acima de R$ 15 CPR e pause o que passar R$ 25 CPR."},
+    {label:"Métricas alvo:",val:"CPR (custo/pedido) até R$ 15. CTR acima de 1,5%. CPC abaixo de R$ 1,50. Frequência < 4 em 7 dias."}
+  ]},
+  {num:6,title:"Otimização contínua",badge:"SEMPRE",badgeColor:"#22c55e",rows:[
+    {label:"Regra A/B:",val:"Sempre rodar 2 criativos diferentes por conjunto. Pausar o perdedor em 3 dias. Escalar o vencedor."},
+    {label:"Segunda-feira:",val:"Analisar métricas da semana anterior. Pausar anúncios acima de R$ 20 CPR. Escalar abaixo de R$ 10."},
+    {label:"Sexta-feira:",val:"Aumentar budget de sexta a domingo em 30-50%. Pico de conversão no delivery."},
+    {label:"Criativo fresco:",val:"Trocar criativos a cada 7-10 dias para evitar fadiga de anúncio. Reutilizar conteúdo orgânico que viralizou."},
+    {label:"Comentários:",val:"Responder TODOS os comentários nos anúncios — eleva relevância e reduz CPM do Meta."}
+  ]}
+];
+
+function buildAds(){
+  var cont=document.getElementById("ads-container");
+  ADS_STEPS.forEach(function(step){
+    var div=document.createElement("div");div.className="ads-step";
+    var rowsHtml=step.rows.map(function(r){
+      return '<div class="ads-row"><div class="ads-row-label">'+r.label+'</div><div>'+r.val+'</div></div>';
+    }).join("");
+    div.innerHTML='<div class="ads-step-head" onclick="this.parentElement.classList.toggle(\'open\')">'+
+      '<div class="ads-step-num">'+step.num+'</div>'+
+      '<div class="ads-step-title">'+step.title+'</div>'+
+      '<div class="ads-step-badge" style="background:'+step.badgeColor+';color:'+(step.badgeColor==='#fbba00'?'#111':'#fff')+'">'+step.badge+'</div>'+
+      '</div>'+
+      '<div class="ads-step-body">'+rowsHtml+'</div>';
+    cont.appendChild(div);
+  });
+}
+
+function goTab(id){
+  document.querySelectorAll(".pg").forEach(function(p){p.classList.remove("on")});
+  document.querySelectorAll(".ntab").forEach(function(t){t.classList.remove("on")});
+  document.getElementById("pg-"+id).classList.add("on");
+  event.target.classList.add("on");
+}
+
+buildCal();
+buildProd();
+buildCopies();
+buildAds();
+updateTotals();
+</script>
